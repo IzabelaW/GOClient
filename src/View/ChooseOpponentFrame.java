@@ -36,6 +36,8 @@ public class ChooseOpponentFrame extends JFrame {
                 MyPresenter myPresenter = MyPresenter.INSTANCE;
                 if(humanButton.isSelected()){
                     myPresenter.humanChosen();
+                    String syf = myPresenter.receiveListOfRooms();
+                    System.out.println(syf);
                     ChooseRoomFrame chooseRoomFrame = new ChooseRoomFrame();
                 }
                 else if (botButton.isSelected()){

@@ -29,4 +29,13 @@ public class Game {
         out.println(response);
     }
 
+    public String receiveResponse() {
+        try {
+            return in.readLine();
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }

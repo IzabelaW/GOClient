@@ -50,4 +50,6 @@ public enum MyPresenter {
         game.sendResponse(move);
     }
 
+    public String receiveListOfRooms() { return game.receiveResponse(); }
+
 }
