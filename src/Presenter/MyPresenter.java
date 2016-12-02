@@ -7,11 +7,12 @@ import java.io.IOException;
 /**
  * Created by Izabela on 2016-12-01.
  */
-public class MyPresenter {
+public enum MyPresenter {
 
+    INSTANCE;
     private Game game;
 
-    public MyPresenter(){
+    private MyPresenter(){
 
         try {
             game = new Game();

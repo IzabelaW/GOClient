@@ -18,7 +18,7 @@ public class Game {
 
     public Game() throws IOException {
 
-        Socket socket = new Socket(InetAddress.getLocalHost(), 9001);
+        Socket socket = new Socket(InetAddress.getLocalHost(), 8900);
         in = new BufferedReader(new InputStreamReader(
                 socket.getInputStream()));
         out = new PrintWriter(socket.getOutputStream(), true);
