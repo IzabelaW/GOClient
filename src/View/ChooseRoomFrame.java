@@ -1,6 +1,11 @@
 package View;
 
+import Presenter.MyPresenter;
+
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 /**
  * Created by Kasia on 2016-12-02.
@@ -14,22 +19,33 @@ public class ChooseRoomFrame extends JFrame {
 
         JButton newRoomButton = new JButton();
         newRoomButton.setText("New");
+        newRoomButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MyPresenter myPresenter = MyPresenter.INSTANCE;
+                myPresenter.newRoomChosen();
+            }
+        });
 
         JButton existingRoomButton = new JButton();
         existingRoomButton.setText("Existing");
+        existingRoomButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MyPresenter myPresenter = MyPresenter.INSTANCE;
+                myPresenter.existingRoomChosen();
+            }
+        });
 
-        ButtonGroup group = new ButtonGroup();
+        JPanel panelForButtons = new JPanel();
 
-      //  JRadioButton humanButton = new JRadioButton("HUMAN");
-      //  humanButton.setSelected(true);
-      //  JRadioButton botButton = new JRadioButton("BOT");
-      //  group.add(humanButton);
-      //  group.add(botButton);
+        panelForButtons.add(newRoomButton);
+        panelForButtons.add(existingRoomButton);
 
 
-
-
-
+        setLayout(new BorderLayout());
+        add(BorderLayout.NORTH,chooseRoomLabel);
+        add(BorderLayout.CENTER, panelForButtons);
 
         setTitle("Go Game");
         setSize(300, 125);
@@ -38,5 +54,11 @@ public class ChooseRoomFrame extends JFrame {
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
 
+    }
+
+    private void makeViewOfRooms(){
+        MyPresenter myPresenter = MyPresenter.INSTANCE;
+        String syf = myPresenter.receiveListOfRooms();
+        System.out.println(syf);
     }
 }
