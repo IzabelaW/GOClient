@@ -8,11 +8,18 @@ import java.net.InetAddress;
 import java.net.Socket;
 
 /**
- * Created by Izabela on 2016-12-01.
+ * Class which communicates with server.
  */
 public class Game {
 
+    /**
+     * Input stream.
+     */
     private BufferedReader in;
+
+    /**
+     * Output stream.
+     */
     private PrintWriter out;
 
 
@@ -25,10 +32,18 @@ public class Game {
 
     }
 
+    /**
+     * Sends response from player. It's used in MyPresenter class.
+     * @param response - response from player
+     */
     public void sendResponse(String response){
         out.println(response);
     }
 
+    /**
+     * Receives response from server. It's used in MyPresenter class.
+     * @return response from server
+     */
     public String receiveResponse() {
         try {
             return in.readLine();

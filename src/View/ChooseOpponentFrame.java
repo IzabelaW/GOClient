@@ -4,11 +4,10 @@ import Presenter.MyPresenter;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 
 /**
- * Created by Kasia on 2016-12-02.
+ * Class of frame, which gives player opportunity to choose type of the opponent (human or bot).
  */
 public class ChooseOpponentFrame extends JFrame {
 
@@ -16,14 +15,20 @@ public class ChooseOpponentFrame extends JFrame {
        makeFinalFrame();
     }
 
+    /**
+     * Sets frame visible and enables player to choose type of the opponent.
+     */
     private void makeFinalFrame(){
         JLabel askForOpponentLabel = new JLabel();
         askForOpponentLabel.setText("Choose your opponent:");
 
         ButtonGroup group = new ButtonGroup();
+
         JRadioButton humanButton = new JRadioButton("HUMAN");
         humanButton.setSelected(true);
+
         JRadioButton botButton = new JRadioButton("BOT");
+
         group.add(humanButton);
         group.add(botButton);
 
@@ -54,6 +59,15 @@ public class ChooseOpponentFrame extends JFrame {
         add(askForOpponentLabel, BorderLayout.NORTH);
         add(panel, BorderLayout.CENTER);
         add(acceptButton, BorderLayout.SOUTH);
+
+        WindowListener windowListener = new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                super.windowClosed(e);
+                MyPresenter myPresenter = MyPresenter.INSTANCE;
+                myPresenter.humanExited();
+            }
+        };
 
 
         setTitle("Go Game");

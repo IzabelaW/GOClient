@@ -8,17 +8,43 @@ import java.awt.event.*;
 import java.util.ArrayList;
 
 /**
- * Created by Kasia on 2016-12-02.
+ * Class of frame, which gives player opportunity to choose room for the game.
  */
 public class ChooseRoomFrame extends JFrame {
 
+    /**
+     * ArrayList of rooms' indexes.
+     */
     private ArrayList<String> index = new ArrayList<>();
+
+    /**
+     * ArrayList of players' logins.
+     */
     private ArrayList<String> player1 = new ArrayList<>();
+
+    /**
+     * ArrayList of opponents' logins.
+     */
     private ArrayList<String> player2 = new ArrayList<>();
+
+    /**
+     * ArrayList of buttons for choosing room.
+     */
     private ArrayList<ChooseButton> chooseButtons = new ArrayList<>();
 
+    /**
+     * JPanel which contains list of existing rooms.
+     */
     private JPanel panelForExistingRooms = new JPanel();
+
+    /**
+     * JPanel which contains buttons for choosing room.
+     */
     private JPanel panelForChooseRoomButtons = new JPanel();
+
+    /**
+     * JPanel which contains header (New or existing?) and two buttons to choose.
+     */
     private JPanel header = new JPanel();
 
 
@@ -31,7 +57,12 @@ public class ChooseRoomFrame extends JFrame {
 
     }
 
-    /* Function which makes 3 Arrays with index of room, login of player 1 and login of player 2 */
+    /**
+     * Makes 3 ArrayLists:
+     * 1) indexes of rooms
+     * 2) logins of players (player1)
+     * 3) logins of opponents (player2)
+     */
     private void makeLists(){
         ArrayList<String> rooms = new ArrayList<>();
 
@@ -56,6 +87,11 @@ public class ChooseRoomFrame extends JFrame {
         }
     }
 
+    /**
+     * Creates labels with indexex and logins.
+     * If room contains only one player, it creates button to give another player opportunity to choose this room.
+     * After all it puts everything on two JPanels (panelForExistingRooms and panelForChooseRoomButtons).
+     */
     private void makeViewOfRooms(){
 
         panelForExistingRooms.setLayout(new GridLayout(index.size(),3));
@@ -101,6 +137,12 @@ public class ChooseRoomFrame extends JFrame {
         }
     }
 
+    /**
+     * Makes header and two buttons:
+     * 1) to create new room
+     * 2) to choose existing room.
+     * Puts also everything on JPanel (panelForNewExistingButtons).
+     */
     private void makeHeader(){
 
         JLabel chooseRoomLabel = new JLabel();
@@ -144,6 +186,9 @@ public class ChooseRoomFrame extends JFrame {
 
     }
 
+    /**
+     * Sets frame visible.
+     */
     private void makeFinalFrame(){
 
         setLayout(new BorderLayout());
@@ -169,18 +214,32 @@ public class ChooseRoomFrame extends JFrame {
 
     }
 
+    /**
+     * Class of button which enables player to choose concrete room.
+     */
     private class ChooseButton extends JButton{
 
+        /**
+         * Index of chosen room.
+         */
         private int index;
 
         private ChooseButton (){
             super("Choose");
         }
 
+        /**
+         * Index setter.
+         * @param index - index of chosen room.
+         */
         public void setIndex(int index) {
             this.index = index;
         }
 
+        /**
+         * Index getter.
+         * @return index of chosen room.
+         */
         public int getIndex() {
             return index;
         }

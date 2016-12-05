@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 /**
- * Created by Kasia on 2016-12-02.
+ * Class of frame, which gives player opportunity to login.
  */
 public class LogInFrame extends JFrame {
 
@@ -15,13 +15,18 @@ public class LogInFrame extends JFrame {
         makeFinalFrame();
     }
 
+    /**
+     * Sets frame visible and enables player to login.
+     */
     private void makeFinalFrame(){
         MyPresenter myPresenter = MyPresenter.INSTANCE;
 
         JLabel welcomeLabel = new JLabel();
-        TextField loginField = new TextField();
-        JButton insertLoginButton = new JButton("OK");
         welcomeLabel.setText("Welcome! If you want to play, insert your login");
+
+        TextField loginField = new TextField();
+
+        JButton insertLoginButton = new JButton("OK");
 
         setLayout(new BorderLayout());
         add(BorderLayout.NORTH, welcomeLabel);
@@ -43,7 +48,8 @@ public class LogInFrame extends JFrame {
             @Override
             public void windowClosed(WindowEvent e) {
                 super.windowClosed(e);
-
+                MyPresenter myPresenter = MyPresenter.INSTANCE;
+                myPresenter.humanExited();
             }
         };
 

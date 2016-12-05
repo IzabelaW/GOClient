@@ -1,10 +1,9 @@
 package View;
 
 /**
- * Created by Kasia on 2016-12-02.
+ * Main class which creates new LogIn Frame.
  */
 public class Main {
-
     public static void main(String[] args){
         LogInFrame logInFrame = new LogInFrame();
     }
