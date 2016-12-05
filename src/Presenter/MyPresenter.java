@@ -50,6 +50,8 @@ public enum MyPresenter {
         game.sendResponse(move);
     }
 
+    public void humanExited(){ game.sendResponse("EXIT");}
+
     public String receiveListOfRooms() { return game.receiveResponse(); }
 
 }

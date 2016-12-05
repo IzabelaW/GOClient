@@ -4,8 +4,7 @@ import Presenter.MyPresenter;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.*;
 import java.util.ArrayList;
 
 /**
@@ -16,6 +15,7 @@ public class ChooseRoomFrame extends JFrame {
     private ArrayList<String> index = new ArrayList<>();
     private ArrayList<String> player1 = new ArrayList<>();
     private ArrayList<String> player2 = new ArrayList<>();
+    private ArrayList<ChooseButton> chooseButtons = new ArrayList<>();
 
     private JPanel panelForExistingRooms = new JPanel();
     private JPanel panelForChooseRoomButtons = new JPanel();
@@ -73,8 +73,13 @@ public class ChooseRoomFrame extends JFrame {
             panelForExistingRooms.add(player2Label);
 
             if (player2.get(i).equals("-")) {
+                indexLabel.setForeground(new Color(0x78DD64));
+                player1Label.setForeground(new Color(0x78DD64));
+                player2Label.setForeground(new Color(0x78DD64));
                 ChooseButton chooseButton = new ChooseButton();
                 chooseButton.setIndex(i);
+                chooseButton.setEnabled(false);
+                chooseButtons.add(chooseButton);
                 chooseButton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e){
@@ -86,6 +91,13 @@ public class ChooseRoomFrame extends JFrame {
                 panelForChooseRoomButtons.add(chooseButton);
 
             }
+            else{
+                indexLabel.setForeground(new Color(0xDD101F));
+                player1Label.setForeground(new Color(0xDD101F));
+                player2Label.setForeground(new Color(0xDD101F));
+                JLabel label = new JLabel();
+                panelForChooseRoomButtons.add(label);
+            }
         }
     }
 
@@ -96,21 +108,28 @@ public class ChooseRoomFrame extends JFrame {
 
         JButton newRoomButton = new JButton();
         newRoomButton.setText("New");
+        JButton existingRoomButton = new JButton();
+        existingRoomButton.setText("Existing");
+
         newRoomButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 MyPresenter myPresenter = MyPresenter.INSTANCE;
                 myPresenter.newRoomChosen();
+
             }
         });
 
-        JButton existingRoomButton = new JButton();
-        existingRoomButton.setText("Existing");
+
         existingRoomButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 MyPresenter myPresenter = MyPresenter.INSTANCE;
                 myPresenter.existingRoomChosen();
+                newRoomButton.setEnabled(false);
+                existingRoomButton.setEnabled(false);
+                for(ChooseButton chooseButton: chooseButtons)
+                    chooseButton.setEnabled(true);
             }
         });
 
@@ -132,6 +151,14 @@ public class ChooseRoomFrame extends JFrame {
         add(BorderLayout.WEST,panelForChooseRoomButtons);
         add(BorderLayout.CENTER,panelForExistingRooms);
 
+        WindowListener windowListener = new WindowAdapter() {
+            @Override
+            public void windowClosed(WindowEvent e) {
+                super.windowClosed(e);
+                MyPresenter myPresenter = MyPresenter.INSTANCE;
+                myPresenter.humanExited();
+            }
+        };
 
         setTitle("Go Game");
         setSize(300, 125);

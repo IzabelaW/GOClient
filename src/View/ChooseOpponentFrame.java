@@ -13,6 +13,10 @@ import java.awt.event.ActionListener;
 public class ChooseOpponentFrame extends JFrame {
 
     public ChooseOpponentFrame(){
+       makeFinalFrame();
+    }
+
+    private void makeFinalFrame(){
         JLabel askForOpponentLabel = new JLabel();
         askForOpponentLabel.setText("Choose your opponent:");
 
