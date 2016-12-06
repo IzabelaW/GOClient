@@ -4,7 +4,8 @@ import Presenter.MyPresenter;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 /**
@@ -158,6 +159,8 @@ public class ChooseRoomFrame extends JFrame {
             public void actionPerformed(ActionEvent e) {
                 MyPresenter myPresenter = MyPresenter.INSTANCE;
                 myPresenter.newRoomChosen();
+                GameFrame gameFrame = new GameFrame();
+
 
             }
         });

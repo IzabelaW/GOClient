@@ -83,11 +83,6 @@ public enum MyPresenter {
     }
 
     /**
-     * Sends info to server that player closed a window.
-     */
-    public void humanExited(){ game.sendResponse("EXIT");}
-
-    /**
      * Receives info about existing rooms from server.
      * @return - info about existing rooms ([indexOfRoom, player1Login, player2Login])
      */
