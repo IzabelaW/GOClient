@@ -44,15 +44,6 @@ public class LogInFrame extends JFrame {
             }
         });
 
-        WindowListener windowListener = new WindowAdapter() {
-            @Override
-            public void windowClosed(WindowEvent e) {
-                super.windowClosed(e);
-                MyPresenter myPresenter = MyPresenter.INSTANCE;
-                myPresenter.humanExited();
-            }
-        };
-
 
         setTitle("Go Game");
         setSize(300,100);

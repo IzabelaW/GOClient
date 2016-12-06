@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketException;
 
 /**
  * Class which communicates with server.
@@ -22,10 +23,12 @@ public class Game {
      */
     private PrintWriter out;
 
+    private Socket socket;
+
 
     public Game() throws IOException {
 
-        Socket socket = new Socket(InetAddress.getLocalHost(), 8900);
+        socket = new Socket(InetAddress.getLocalHost(), 8900);
         in = new BufferedReader(new InputStreamReader(
                 socket.getInputStream()));
         out = new PrintWriter(socket.getOutputStream(), true);

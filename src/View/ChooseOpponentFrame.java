@@ -60,15 +60,6 @@ public class ChooseOpponentFrame extends JFrame {
         add(panel, BorderLayout.CENTER);
         add(acceptButton, BorderLayout.SOUTH);
 
-        WindowListener windowListener = new WindowAdapter() {
-            @Override
-            public void windowClosed(WindowEvent e) {
-                super.windowClosed(e);
-                MyPresenter myPresenter = MyPresenter.INSTANCE;
-                myPresenter.humanExited();
-            }
-        };
-
 
         setTitle("Go Game");
         setSize(300,125);

@@ -196,15 +196,6 @@ public class ChooseRoomFrame extends JFrame {
         add(BorderLayout.WEST,panelForChooseRoomButtons);
         add(BorderLayout.CENTER,panelForExistingRooms);
 
-        WindowListener windowListener = new WindowAdapter() {
-            @Override
-            public void windowClosed(WindowEvent e) {
-                super.windowClosed(e);
-                MyPresenter myPresenter = MyPresenter.INSTANCE;
-                myPresenter.humanExited();
-            }
-        };
-
         setTitle("Go Game");
         setSize(300, 125);
         setResizable(false);
