@@ -1,6 +1,7 @@
 package View;
 
 import Presenter.MyPresenter;
+import View.Listener.GameMessageListener;
 
 import javax.swing.*;
 import java.awt.*;
@@ -8,17 +9,39 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 /**
- * Created by Kasia on 2016-12-02.
+ * Class of frame with game board.
  */
-public class GameFrame extends JFrame {
+public class GameFrame extends JFrame implements GameMessageListener{
 
-    ImageIcon[][] freeFieldsImg = new ImageIcon[19][19];
-    ImageIcon[][] blackFieldsImg = new ImageIcon[19][19];
-    ImageIcon[][] whiteFieldsImg = new ImageIcon[19][19];
+    /**
+     * Table with images of free fields.
+     */
+    private ImageIcon[][] freeFieldsImg = new ImageIcon[19][19];
 
-    FieldLabel[][] fields = new FieldLabel[19][19];
+    /**
+     * Table with images of fields occupied by black stones.
+     */
+    private ImageIcon[][] blackFieldsImg = new ImageIcon[19][19];
 
-    JPanel panelForBoard;
+    /**
+     * Table with images of fields occupied by white stones.
+     */
+    private ImageIcon[][] whiteFieldsImg = new ImageIcon[19][19];
+
+    /**
+     * Table with labels treated like fields.
+     */
+    private FieldLabel[][] fields = new FieldLabel[19][19];
+
+    /**
+     * Panel with game board.
+     */
+    private JPanel panelForBoard;
+
+    /**
+     * Statement whether this is the player's turn now.
+     */
+    private Boolean myTurn = false;
 
     public GameFrame()  {
         makeListsOfImages();
@@ -27,7 +50,9 @@ public class GameFrame extends JFrame {
 
     }
 
-
+    /**
+     * Creates game board.
+     */
     private void makeBoard(){
         panelForBoard = new JPanel();
         panelForBoard.setLayout(new GridLayout(19,19));
@@ -36,15 +61,18 @@ public class GameFrame extends JFrame {
             for(int j = 0; j < 19; j++){
                 fields[j][i] = new FieldLabel();
                 fields[j][i].setIcon(freeFieldsImg[j][i]);
-                fields[j][i].setX(j);
-                fields[j][i].setY(i);
+                fields[j][i].setClickedX(j);
+                fields[j][i].setClickedY(i);
                 fields[j][i].addMouseListener(new MouseAdapter() {
                     @Override
                     public void mouseClicked(MouseEvent e) {
                         super.mouseClicked(e);
-                        MyPresenter myPresenter = MyPresenter.INSTANCE;
-                        JLabel label = (JLabel) e.getSource();
-                        myPresenter.moveMade(Integer.toString(label.getX()) +" "+ Integer.toString(label.getY()));
+                        if(myTurn) {
+                            MyPresenter myPresenter = MyPresenter.INSTANCE;
+                            FieldLabel label = (FieldLabel) e.getSource();
+                            myPresenter.moveMade(Integer.toString(label.getClickedX()) + " " + Integer.toString(label.getClickedY()));
+                            myTurn = false; // w przypadku gdy będzie nielegalny ruch, kolejna możliwość ruchu
+                        }
                     }
                 });
                 panelForBoard.add(fields[j][i]);
@@ -53,6 +81,12 @@ public class GameFrame extends JFrame {
 
     }
 
+    /**
+     * Makes 3 Tables:
+     * 1) images of free fields
+     * 2) images of fields occupied by white stones
+     * 3) images of fields occupied by black stones.
+     */
     private void makeListsOfImages(){
         ImageIcon leftSide = new ImageIcon("img/boklewy.png");
         ImageIcon whiteLeftSide = new ImageIcon("img/boklewyBiały.png");
@@ -127,7 +161,9 @@ public class GameFrame extends JFrame {
 
     }
 
-
+    /**
+     * Sets frame visible.
+     */
     private void makeFinalFrame(){
         setLayout(new BorderLayout());
         add(BorderLayout.CENTER, panelForBoard);
@@ -140,23 +176,48 @@ public class GameFrame extends JFrame {
 
     }
 
+    @Override
+    public void playerReceivedPermissionToMove() {
+        myTurn = true;
+        //wyswietlenie napisu "YOUR TURN"
+    }
+
+    @Override
+    public void opponentPassed() {
+        myTurn = true;
+        JOptionPane.showMessageDialog(null, "Opponent passed. Your turn!");
+    }
+
+    @Override
+    public void opponentGaveUp() {
+        JOptionPane.showMessageDialog(null, "Congrats! Opponent gave up. You won!");
+    }
+
+    @Override
+    public void updateBoard() {
+
+    }
+
+    /**
+     * Class of label treated like field.
+     */
     private class FieldLabel extends JLabel{
         int x;
         int y;
 
-        public void setX(int x){
+        public void setClickedX(int x){
             this.x = x;
         }
 
-        public void setY(int y){
+        public void setClickedY(int y){
             this.y = y;
         }
 
-        public int getX(){
+        public int getClickedX(){
             return x;
         }
 
-        public int getY(){
+        public int getClickedY(){
             return y;
         }
     }

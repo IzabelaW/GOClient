@@ -89,7 +89,7 @@ public class ChooseRoomFrame extends JFrame {
     }
 
     /**
-     * Creates labels with indexex and logins.
+     * Creates labels with indexes and logins.
      * If room contains only one player, it creates button to give another player opportunity to choose this room.
      * After all it puts everything on two JPanels (panelForExistingRooms and panelForChooseRoomButtons).
      */
@@ -160,8 +160,6 @@ public class ChooseRoomFrame extends JFrame {
                 MyPresenter myPresenter = MyPresenter.INSTANCE;
                 myPresenter.newRoomChosen();
                 GameFrame gameFrame = new GameFrame();
-
-
             }
         });
 

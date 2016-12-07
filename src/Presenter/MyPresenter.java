@@ -1,6 +1,7 @@
 package Presenter;
 
 import Usecase.Game;
+import View.Listener.GameMessageListener;
 
 import java.io.IOException;
 
@@ -86,6 +87,34 @@ public enum MyPresenter {
      * Receives info about existing rooms from server.
      * @return - info about existing rooms ([indexOfRoom, player1Login, player2Login])
      */
-    public String receiveListOfRooms() { return game.receiveResponse(); }
+    public String receiveListOfIndexes() {
+
+        String response = game.receiveResponse();
+
+
+    }
+
+    /**
+     * Receives response from server during game.
+     * @return response from server.
+     */
+    public void receiveGameMessage (GameMessageListener listener){
+        while (true){
+            String response = game.receiveResponse();
+            if(response.equals("MAKE_TURN")){
+                listener.playerReceivedPermissionToMove();
+            }
+            else if(response.equals("OPPONENT_PASSED")){
+                listener.opponentPassed();
+            }
+            else if(response.equals("OPPONENT_GAVE_UP")){
+                listener.opponentGaveUp();
+            }
+            else if (response.startsWith("UPDATED_BOARD")){
+
+                listener.updateBoard();
+            }
+        }
+    }
 
 }
