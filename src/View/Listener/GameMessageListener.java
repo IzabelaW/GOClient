@@ -11,6 +11,6 @@ public interface GameMessageListener {
 
     void opponentGaveUp();
 
-    void updateBoard();
+    void updateBoard(String[][] updatedBoard);
 
 }

@@ -105,9 +105,13 @@ public class ChooseRoomFrame extends JFrame {
                 chooseButton.addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e){
-                        MyPresenter presenter = MyPresenter.INSTANCE;
+                        MyPresenter myPresenter = MyPresenter.INSTANCE;
                         ChooseButton exactChooseButton = (ChooseButton) e.getSource();
-                        presenter.indexOfRoomChosen(Integer.toString(exactChooseButton.getIndex()));
+                        myPresenter.indexOfRoomChosen(Integer.toString(exactChooseButton.getIndex()));
+                        GameFrame gameFrame = new GameFrame();
+                        myPresenter.receiveGameMessage(gameFrame);
+                        dispose();
+
                     }
                 });
                 panelForChooseRoomButtons.add(chooseButton);
@@ -145,6 +149,8 @@ public class ChooseRoomFrame extends JFrame {
                 MyPresenter myPresenter = MyPresenter.INSTANCE;
                 myPresenter.newRoomChosen();
                 GameFrame gameFrame = new GameFrame();
+                myPresenter.receiveGameMessage(gameFrame);
+                dispose();
 
             }
         });
@@ -184,7 +190,7 @@ public class ChooseRoomFrame extends JFrame {
         add(BorderLayout.CENTER,panelForExistingRooms);
 
         setTitle("Go Game");
-        setSize(300, 125);
+        setSize(400, 600);
         setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

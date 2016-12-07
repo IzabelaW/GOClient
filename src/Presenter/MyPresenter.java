@@ -106,10 +106,22 @@ public enum MyPresenter {
 
     }
 
-    public String[][] receiveUpdatedBoard(){
+    public String[][] receiveUpdatedBoard(String response){
         String[][] updatedBoard = new String[19][19];
-        String response = game.receiveResponse();
-        System.out.println(response);
+        String[] responseBoard;
+
+        String response1 = response.replace("UPDATED_BOARD [","");
+        String response2 = response1.replace("]","");
+
+        responseBoard = response2.split(", ");
+
+        if(!response2.equals("")){
+            for(int i = 0; i < 19; i++){
+                for(int j = 0; j < 19; j++){
+                    updatedBoard[i][j] = responseBoard[(i*18)+i+j];
+                }
+            }
+        }
         return updatedBoard;
     }
 
@@ -119,22 +131,24 @@ public enum MyPresenter {
      * @return response from server.
      */
     public void receiveGameMessage (GameMessageListener listener){
-        while (true){
-            String response = game.receiveResponse();
-            if(response.equals("MAKE_TURN")){
-                listener.playerReceivedPermissionToMove();
-            }
-            else if(response.equals("OPPONENT_PASSED")){
-                listener.opponentPassed();
-            }
-            else if(response.equals("OPPONENT_GAVE_UP")){
-                listener.opponentGaveUp();
-            }
-            else if (response.startsWith("UPDATED_BOARD")){
 
-                listener.updateBoard();
+        new Thread(() -> {
+
+            while (true) {
+                String response = game.receiveResponse();
+                if (response.equals("MAKE_TURN")) {
+                    listener.playerReceivedPermissionToMove();
+                } else if (response.equals("OPPONENT_PASSED")) {
+                    listener.opponentPassed();
+                } else if (response.equals("OPPONENT_GAVE_UP")) {
+                    listener.opponentGaveUp();
+                } else if (response.startsWith("UPDATED_BOARD ")) {
+                    String[][] updatedBoard = receiveUpdatedBoard(response);
+                    listener.updateBoard(updatedBoard);
+                }
             }
-        }
+
+        }).start();
     }
 
 

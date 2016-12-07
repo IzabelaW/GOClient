@@ -45,8 +45,6 @@ public class GameFrame extends JFrame implements GameMessageListener{
 
     public GameFrame()  {
 
-        MyPresenter myPresenter = MyPresenter.INSTANCE;
-        myPresenter.receiveGameMessage(this);
         makeListsOfImages();
         makeBoard();
         makeFinalFrame();
@@ -69,12 +67,12 @@ public class GameFrame extends JFrame implements GameMessageListener{
                 fields[j][i].setClickedY(i);
                 fields[j][i].addMouseListener(new MouseAdapter() {
                     @Override
-                    public void mouseClicked(MouseEvent e) {
-                        super.mouseClicked(e);
+                    public void mousePressed(MouseEvent e) {
+                        super.mousePressed(e);
                         if(myTurn) {
                             MyPresenter myPresenter = MyPresenter.INSTANCE;
                             FieldLabel label = (FieldLabel) e.getSource();
-                            myPresenter.moveMade(Integer.toString(label.getClickedX()) + " " + Integer.toString(label.getClickedY()));
+                            myPresenter.moveMade("TURN " + Integer.toString(label.getClickedX()) + " " + Integer.toString(label.getClickedY()));
                             myTurn = false; // w przypadku gdy będzie nielegalny ruch, kolejna możliwość ruchu
                         }
                     }
@@ -172,7 +170,7 @@ public class GameFrame extends JFrame implements GameMessageListener{
         setLayout(new BorderLayout());
         add(BorderLayout.CENTER, panelForBoard);
         setTitle("Go Game");
-        setSize(750,750);
+        setSize(1000,850);
         setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -198,9 +196,21 @@ public class GameFrame extends JFrame implements GameMessageListener{
     }
 
     @Override
-    public void updateBoard() {
-        MyPresenter myPresenter = MyPresenter.INSTANCE;
-        myPresenter.receiveUpdatedBoard();
+    public void updateBoard(String[][] updatedBoard) {
+        for(int i = 0; i < 19; i++){
+            for (int j = 0; j < 19; j++){
+
+                if (updatedBoard[i][j].equals("null")){
+                    fields[i][j].setIcon(freeFieldsImg[i][j]);
+                }
+                else if (updatedBoard[i][j].equals("BLACK")){
+                    fields[i][j].setIcon(blackFieldsImg[i][j]);
+                }
+                else if (updatedBoard[i][j].equals("WHITE")){
+                    fields[i][j].setIcon(whiteFieldsImg[i][j]);
+                }
+            }
+        }
     }
 
     /**
