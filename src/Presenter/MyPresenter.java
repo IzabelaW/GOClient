@@ -4,6 +4,7 @@ import Usecase.Game;
 import View.Listener.GameMessageListener;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 /**
  * Enum Singleton class.
@@ -84,15 +85,34 @@ public enum MyPresenter {
     }
 
     /**
-     * Receives info about existing rooms from server.
-     * @return - info about existing rooms ([indexOfRoom, player1Login, player2Login])
+     * Receives info about indexes of existing rooms from server.
+     * @return - info about indexes of existing rooms
      */
-    public String receiveListOfIndexes() {
+    public ArrayList<String> receiveListOfRoomsInfo() {
 
+        ArrayList<String> roomsInfo = new ArrayList<>();
         String response = game.receiveResponse();
 
+        String list = response.replace("[","");
+        String readyList = list.replace("]","");
+
+        if (!readyList.equals("")) {
+
+            for (String info : readyList.split(", ")) {
+                roomsInfo.add(info);
+            }
+        }
+        return roomsInfo;
 
     }
+
+    public String[][] receiveUpdatedBoard(){
+        String[][] updatedBoard = new String[19][19];
+        String response = game.receiveResponse();
+        System.out.println(response);
+        return updatedBoard;
+    }
+
 
     /**
      * Receives response from server during game.
@@ -116,5 +136,9 @@ public enum MyPresenter {
             }
         }
     }
+
+
+
+
 
 }

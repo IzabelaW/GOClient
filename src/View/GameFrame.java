@@ -44,9 +44,13 @@ public class GameFrame extends JFrame implements GameMessageListener{
     private Boolean myTurn = false;
 
     public GameFrame()  {
+
+        MyPresenter myPresenter = MyPresenter.INSTANCE;
+        myPresenter.receiveGameMessage(this);
         makeListsOfImages();
         makeBoard();
         makeFinalFrame();
+
 
     }
 
@@ -195,7 +199,8 @@ public class GameFrame extends JFrame implements GameMessageListener{
 
     @Override
     public void updateBoard() {
-
+        MyPresenter myPresenter = MyPresenter.INSTANCE;
+        myPresenter.receiveUpdatedBoard();
     }
 
     /**

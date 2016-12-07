@@ -16,17 +16,17 @@ public class ChooseRoomFrame extends JFrame {
     /**
      * ArrayList of rooms' indexes.
      */
-    private ArrayList<String> index = new ArrayList<>();
+    private ArrayList<String> indexes = new ArrayList<>();
 
     /**
-     * ArrayList of players' logins.
+     * ArrayList of initiators' logins.
      */
-    private ArrayList<String> player1 = new ArrayList<>();
+    private ArrayList<String> initiators = new ArrayList<>();
 
     /**
-     * ArrayList of opponents' logins.
+     * ArrayList of joiners' logins.
      */
-    private ArrayList<String> player2 = new ArrayList<>();
+    private ArrayList<String> joiners = new ArrayList<>();
 
     /**
      * ArrayList of buttons for choosing room.
@@ -65,27 +65,12 @@ public class ChooseRoomFrame extends JFrame {
      * 3) logins of opponents (player2)
      */
     private void makeLists(){
-        ArrayList<String> rooms = new ArrayList<>();
 
         MyPresenter myPresenter = MyPresenter.INSTANCE;
-        String listOfRooms = myPresenter.receiveListOfRooms();
+        indexes = myPresenter.receiveListOfRoomsInfo();
+        initiators = myPresenter.receiveListOfRoomsInfo();
+        joiners = myPresenter.receiveListOfRoomsInfo();
 
-        String list = listOfRooms.replace("[","");
-        String readyList = list.replace("]","");
-
-        if (!readyList.equals("")) {
-
-            for (String room : readyList.split(", ")) {
-                rooms.add(room);
-            }
-
-            for (String room : rooms) {
-                String[] info = room.split(" ");
-                index.add(info[0]);
-                player1.add(info[1]);
-                player2.add(info[2]);
-            }
-        }
     }
 
     /**
@@ -95,21 +80,21 @@ public class ChooseRoomFrame extends JFrame {
      */
     private void makeViewOfRooms(){
 
-        panelForExistingRooms.setLayout(new GridLayout(index.size(),3));
-        panelForChooseRoomButtons.setLayout(new GridLayout(index.size(),1));
+        panelForExistingRooms.setLayout(new GridLayout(indexes.size(),3));
+        panelForChooseRoomButtons.setLayout(new GridLayout(indexes.size(),1));
 
 
-        for (int i=0; i<index.size(); i++){
+        for (int i=0; i<indexes.size(); i++){
 
-            JLabel indexLabel = new JLabel(index.get(i));
-            JLabel player1Label = new JLabel(player1.get(i));
-            JLabel player2Label = new JLabel(player2.get(i));
+            JLabel indexLabel = new JLabel(indexes.get(i));
+            JLabel player1Label = new JLabel(initiators.get(i));
+            JLabel player2Label = new JLabel(joiners.get(i));
 
             panelForExistingRooms.add(indexLabel);
             panelForExistingRooms.add(player1Label);
             panelForExistingRooms.add(player2Label);
 
-            if (player2.get(i).equals("-")) {
+            if (joiners.get(i).equals("-")) {
                 indexLabel.setForeground(new Color(0x78DD64));
                 player1Label.setForeground(new Color(0x78DD64));
                 player2Label.setForeground(new Color(0x78DD64));
@@ -160,6 +145,7 @@ public class ChooseRoomFrame extends JFrame {
                 MyPresenter myPresenter = MyPresenter.INSTANCE;
                 myPresenter.newRoomChosen();
                 GameFrame gameFrame = new GameFrame();
+
             }
         });
 
