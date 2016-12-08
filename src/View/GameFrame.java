@@ -200,7 +200,7 @@ public class GameFrame extends JFrame implements GameMessageListener{
         for(int i = 0; i < 19; i++){
             for (int j = 0; j < 19; j++){
 
-                if (updatedBoard[i][j].equals("null")){
+                if (updatedBoard[i][j].equals("FREE")){
                     fields[i][j].setIcon(freeFieldsImg[i][j]);
                 }
                 else if (updatedBoard[i][j].equals("BLACK")){
