@@ -138,6 +138,14 @@ public enum MyPresenter {
                 String response = game.receiveResponse();
                 if (response.equals("MAKE_TURN")) {
                     listener.playerReceivedPermissionToMove();
+                } else if (response.equals("LEGAL_MOVE")) {
+                    listener.playerMadeLegalMove();
+                } else if (response.equals("KO")) {
+                    listener.playerMadeIllegalMoveKO();
+                } else if (response.equals("SUICIDE")) {
+                    listener.playerMadeIllegalMoveSuicide();
+                } else if (response.equals("OCCUPIED_FIELD")) {
+                    listener.playerMadeIllegalMoveOccupiedField();
                 } else if (response.equals("OPPONENT_PASSED")) {
                     listener.opponentPassed();
                 } else if (response.equals("OPPONENT_GAVE_UP")) {
@@ -150,9 +158,4 @@ public enum MyPresenter {
 
         }).start();
     }
-
-
-
-
-
 }

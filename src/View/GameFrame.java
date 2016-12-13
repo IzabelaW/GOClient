@@ -69,12 +69,11 @@ public class GameFrame extends JFrame implements GameMessageListener{
                     @Override
                     public void mousePressed(MouseEvent e) {
                         super.mousePressed(e);
-                        if(myTurn) {
-                            MyPresenter myPresenter = MyPresenter.INSTANCE;
-                            FieldLabel label = (FieldLabel) e.getSource();
-                            myPresenter.moveMade("TURN " + Integer.toString(label.getClickedX()) + " " + Integer.toString(label.getClickedY()));
-                            myTurn = false; // w przypadku gdy będzie nielegalny ruch, kolejna możliwość ruchu
-                        }
+                            if (myTurn) {
+                                MyPresenter myPresenter = MyPresenter.INSTANCE;
+                                FieldLabel label = (FieldLabel) e.getSource();
+                                myPresenter.moveMade("TURN " + Integer.toString(label.getClickedX()) + " " + Integer.toString(label.getClickedY()));
+                            }
                     }
                 });
                 panelForBoard.add(fields[j][i]);
@@ -168,9 +167,10 @@ public class GameFrame extends JFrame implements GameMessageListener{
      */
     private void makeFinalFrame(){
         setLayout(new BorderLayout());
+        panelForBoard.setPreferredSize(new Dimension(625,625));
         add(BorderLayout.CENTER, panelForBoard);
         setTitle("Go Game");
-        setSize(1000,850);
+        setSize(625,625);
         setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -182,6 +182,26 @@ public class GameFrame extends JFrame implements GameMessageListener{
     public void playerReceivedPermissionToMove() {
         myTurn = true;
         //wyswietlenie napisu "YOUR TURN"
+    }
+
+    @Override
+    public void playerMadeLegalMove() {
+        myTurn = false;
+    }
+
+    @Override
+    public void playerMadeIllegalMoveKO() {
+        JOptionPane.showMessageDialog(null, "Illegal move: KO. Try again!");
+    }
+
+    @Override
+    public void playerMadeIllegalMoveSuicide() {
+        JOptionPane.showMessageDialog(null, "Illegal move: suicide. Try again!");
+    }
+
+    @Override
+    public void playerMadeIllegalMoveOccupiedField() {
+        JOptionPane.showMessageDialog(null, "Illegal move: occupied field. Try again!");
     }
 
     @Override

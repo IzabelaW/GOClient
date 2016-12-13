@@ -7,6 +7,14 @@ public interface GameMessageListener {
 
     void playerReceivedPermissionToMove();
 
+    void playerMadeLegalMove();
+
+    void playerMadeIllegalMoveKO();
+
+    void playerMadeIllegalMoveSuicide();
+
+    void playerMadeIllegalMoveOccupiedField();
+
     void opponentPassed();
 
     void opponentGaveUp();
