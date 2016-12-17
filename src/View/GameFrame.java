@@ -112,7 +112,7 @@ public class GameFrame extends JFrame implements GameMessageListener{
     /**
      * If marking stones is enabled for the player.
      */
-    private Boolean markDeadStones;
+    private Boolean ifMarkDeadStones;
 
     public GameFrame()  {
 
@@ -138,7 +138,7 @@ public class GameFrame extends JFrame implements GameMessageListener{
                 fields[j][i].setIcon(freeFieldsImg[j][i]);
                 fields[j][i].setClickedX(j);
                 fields[j][i].setClickedY(i);
-                fields[i][j].setColor("FREE");
+                fields[j][i].setColor("FREE");
                 fields[j][i].addMouseListener(new MouseAdapter() {
                     @Override
                     public void mousePressed(MouseEvent e) {
@@ -148,14 +148,14 @@ public class GameFrame extends JFrame implements GameMessageListener{
                                 FieldLabel label = (FieldLabel) e.getSource();
                                 myPresenter.moveMade("TURN " + Integer.toString(label.getClickedX()) + " " + Integer.toString(label.getClickedY()));
                             }
-                            else if(markDeadStones){
+                            else if(ifMarkDeadStones){
                                 FieldLabel label = (FieldLabel) e.getSource();
                                 if(label.getColor().equals("BLACK") && playerColor.equals("WHITE")) {
-                                    label.setIcon(deadBlackFieldsImg[label.getClickedX()][label.getClickedY()]);
+                                    fields[label.getClickedX()][label.getClickedY()].setIcon(deadBlackFieldsImg[label.getClickedX()][label.getClickedY()]);
                                     markedAsDead[label.getClickedX()][label.getClickedY()] = true;
                                 }
                                 else if(label.getColor().equals("WHITE") && playerColor.equals("BLACK")){
-                                    label.setIcon(deadWhiteFieldsImg[label.getClickedX()][label.getClickedY()]);
+                                    fields[label.getClickedX()][label.getClickedY()].setIcon(deadWhiteFieldsImg[label.getClickedX()][label.getClickedY()]);
                                     markedAsDead[label.getClickedX()][label.getClickedY()] = true;
                                 }
                             }
@@ -442,7 +442,8 @@ public class GameFrame extends JFrame implements GameMessageListener{
                     fields[i][j].setColor("FREE");
                 }
                 else if (updatedBoard[i][j].equals("BLACK")){
-                    fields[i][j].setIcon(blackFieldsImg[i][j]);
+                    fields[i][j].setIcon(deadBlackFieldsImg[i][j]);
+
                     fields[i][j].setColor("BLACK");
                 }
                 else if (updatedBoard[i][j].equals("WHITE")){
@@ -468,13 +469,13 @@ public class GameFrame extends JFrame implements GameMessageListener{
     public void waitForOpponentToMarkDeadStones(){
         infoLabel.setText("<html>Wait for opponent <br/>to mark dead stones!</html>");
         passButton.setEnabled(false);
-        markDeadStones=false;
+        ifMarkDeadStones =false;
     }
 
     public void markDeadStones(){
         JOptionPane.showMessageDialog(null, "Opponent has also passed. Mark his dead stones.");
         passButton.setEnabled(false);
-        markDeadStones=true;
+        ifMarkDeadStones =true;
         suggestButton.setVisible(true);
 
     }
