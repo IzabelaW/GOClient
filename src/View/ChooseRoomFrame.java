@@ -109,6 +109,7 @@ public class ChooseRoomFrame extends JFrame {
                         ChooseButton exactChooseButton = (ChooseButton) e.getSource();
                         myPresenter.indexOfRoomChosen(Integer.toString(exactChooseButton.getIndex()));
                         GameFrame gameFrame = new GameFrame();
+                        gameFrame.joinToRoom(initiators.get(exactChooseButton.getIndex()));
                         myPresenter.receiveGameMessage(gameFrame);
                         dispose();
 
@@ -149,6 +150,7 @@ public class ChooseRoomFrame extends JFrame {
                 MyPresenter myPresenter = MyPresenter.INSTANCE;
                 myPresenter.newRoomChosen();
                 GameFrame gameFrame = new GameFrame();
+                gameFrame.waitingForOpponent();
                 myPresenter.receiveGameMessage(gameFrame);
                 dispose();
 

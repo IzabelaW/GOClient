@@ -5,6 +5,8 @@ package View.Listener;
  */
 public interface GameMessageListener {
 
+    void opponentJoined(String opponentLogin);
+
     void playerReceivedPermissionToMove();
 
     void playerMadeLegalMove();
@@ -20,5 +22,13 @@ public interface GameMessageListener {
     void opponentGaveUp();
 
     void updateBoard(String[][] updatedBoard);
+
+    void updateCaptured(String capturedForWhite, String capturedForBlack);
+
+    void waitForOpponentToMarkDeadStones();
+
+    void markDeadStones();
+
+    void showMarkedAsDead(String[][] markedAsDead);
 
 }

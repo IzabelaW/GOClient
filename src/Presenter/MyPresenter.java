@@ -84,6 +84,21 @@ public enum MyPresenter {
         game.sendResponse(move);
     }
 
+    public void playerPassed(){
+        game.sendResponse("PASS");
+    }
+
+    public void sendFieldsMarkedAsDead(boolean[][] fieldsMarkedAsDead){
+        ArrayList<String> marked = new ArrayList<>();
+
+        for(int i = 0; i < 19; i++){
+            for(int j = 0; j < 19; j++){
+                marked.add(Boolean.toString(fieldsMarkedAsDead[i][j]));
+            }
+        }
+        game.sendResponse("MARKED_AS_DEAD: " + marked);
+    }
+
     /**
      * Receives info about indexes of existing rooms from server.
      * @return - info about indexes of existing rooms
@@ -109,9 +124,16 @@ public enum MyPresenter {
     public String[][] receiveUpdatedBoard(String response){
         String[][] updatedBoard = new String[19][19];
         String[] responseBoard;
+        String response2;
 
-        String response1 = response.replace("UPDATED_BOARD [","");
-        String response2 = response1.replace("]","");
+        if(response.startsWith("UPDATED_BOARD")) {
+            String response1 = response.replace("UPDATED_BOARD [", "");
+            response2 = response1.replace("]", "");
+        }
+        else  {
+            String response1 = response.replace("MARKED_AS_DEAD: [", "");
+            response2 = response1.replace("]", "");
+        }
 
         responseBoard = response2.split(", ");
 
@@ -136,7 +158,10 @@ public enum MyPresenter {
 
             while (true) {
                 String response = game.receiveResponse();
-                if (response.equals("MAKE_TURN")) {
+                if(response.startsWith("LOGIN: ")){
+                    String login = response.replace("LOGIN: ", "");
+                    listener.opponentJoined(login);
+                } else if(response.equals("MAKE_TURN")) {
                     listener.playerReceivedPermissionToMove();
                 } else if (response.equals("LEGAL_MOVE")) {
                     listener.playerMadeLegalMove();
@@ -153,6 +178,21 @@ public enum MyPresenter {
                 } else if (response.startsWith("UPDATED_BOARD ")) {
                     String[][] updatedBoard = receiveUpdatedBoard(response);
                     listener.updateBoard(updatedBoard);
+                }
+                else if(response.startsWith("CAPTURED")){
+                    String string = response.replace("CAPTURED ", "");
+                    String[] captured = string.split(",");
+                    listener.updateCaptured(captured[0], captured[1]);
+                }
+                else if (response.equals("WAIT_FOR_MARKING_DEAD")){
+                    listener.waitForOpponentToMarkDeadStones();
+                }
+                else if (response.equals("MARK_DEAD")){
+                    listener.markDeadStones();
+                }
+                else if (response.startsWith("MARKED_AS_DEAD: ")){
+                    String[][] markedAsDead = receiveUpdatedBoard(response);
+                    listener.showMarkedAsDead(markedAsDead);
                 }
             }
 
