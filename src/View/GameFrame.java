@@ -1,6 +1,7 @@
 package View;
 
 import Presenter.MyPresenter;
+import View.ImageIcon.*;
 import View.Listener.GameMessageListener;
 
 import javax.swing.*;
@@ -18,27 +19,27 @@ public class GameFrame extends JFrame implements GameMessageListener{
     /**
      * Table with images of free fields.
      */
-    private ImageIcon[][] freeFieldsImg = new ImageIcon[19][19];
+    private FreeFieldsImg[][] freeFieldsImg = new FreeFieldsImg[19][19];
 
     /**
      * Table with images of fields occupied by black stones.
      */
-    private ImageIcon[][] blackFieldsImg = new ImageIcon[19][19];
+    private BlackFieldsImg[][] blackFieldsImg = new BlackFieldsImg[19][19];
 
     /**
      * Table with images of fields occupied by white stones.
      */
-    private ImageIcon[][] whiteFieldsImg = new ImageIcon[19][19];
+    private WhiteFieldsImg[][] whiteFieldsImg = new WhiteFieldsImg[19][19];
 
     /**
      * Table with images of white fields marked as dead.
      */
-    private ImageIcon[][] deadWhiteFieldsImg = new ImageIcon[19][19];
+    private DeadWhiteFieldsImg[][] deadWhiteFieldsImg = new DeadWhiteFieldsImg[19][19];
 
     /**
      * Table with images of black fields marked as dead.
      */
-    private ImageIcon[][] deadBlackFieldsImg = new ImageIcon[19][19];
+    private DeadBlackFieldsImg[][] deadBlackFieldsImg = new DeadBlackFieldsImg[19][19];
 
     /**
      * Table with labels treated like fields.
@@ -95,6 +96,16 @@ public class GameFrame extends JFrame implements GameMessageListener{
     JButton passButton;
 
     /**
+     * Button which accepts suggested dead stones.
+     */
+    JButton acceptButton;
+
+    /**
+     * Button which doesn't accept suggested dead stones.
+     */
+    JButton notAcceptButton;
+
+    /**
      * Suggest button.
      */
     JButton suggestButton;
@@ -138,7 +149,6 @@ public class GameFrame extends JFrame implements GameMessageListener{
                 fields[j][i].setIcon(freeFieldsImg[j][i]);
                 fields[j][i].setClickedX(j);
                 fields[j][i].setClickedY(i);
-                fields[j][i].setColor("FREE");
                 fields[j][i].addMouseListener(new MouseAdapter() {
                     @Override
                     public void mousePressed(MouseEvent e) {
@@ -150,11 +160,11 @@ public class GameFrame extends JFrame implements GameMessageListener{
                             }
                             else if(ifMarkDeadStones){
                                 FieldLabel label = (FieldLabel) e.getSource();
-                                if(label.getColor().equals("BLACK") && playerColor.equals("WHITE")) {
+                                if(label.getIcon() instanceof BlackFieldsImg && playerColor.equals("WHITE")) {
                                     fields[label.getClickedX()][label.getClickedY()].setIcon(deadBlackFieldsImg[label.getClickedX()][label.getClickedY()]);
                                     markedAsDead[label.getClickedX()][label.getClickedY()] = true;
                                 }
-                                else if(label.getColor().equals("WHITE") && playerColor.equals("BLACK")){
+                                else if(label.getIcon() instanceof WhiteFieldsImg && playerColor.equals("BLACK")){
                                     fields[label.getClickedX()][label.getClickedY()].setIcon(deadWhiteFieldsImg[label.getClickedX()][label.getClickedY()]);
                                     markedAsDead[label.getClickedX()][label.getClickedY()] = true;
                                 }
@@ -182,6 +192,30 @@ public class GameFrame extends JFrame implements GameMessageListener{
         myNumberOfCaptured.setEditable(false);
         opponentNumberOfCaptured.setEditable(false);
         infoLabel = new JLabel();
+
+        JPanel acceptDeadStonesPanel = new JPanel();
+        acceptButton = new JButton("YES");
+        notAcceptButton = new JButton("NO");
+        acceptDeadStonesPanel.add(acceptButton);
+        acceptDeadStonesPanel.add(notAcceptButton);
+        acceptButton.setVisible(false);
+        notAcceptButton.setVisible(false);
+        rightPanel.add(acceptDeadStonesPanel);
+
+        acceptButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+
+        notAcceptButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+
         JLabel myEmptyLabel = new JLabel("                                                    ");
         JLabel opponentEmptyLabel = new JLabel("                                                    ");
 
@@ -226,6 +260,8 @@ public class GameFrame extends JFrame implements GameMessageListener{
                         markedAsDead[i][j] = false;
                     }
                 }
+                ifMarkDeadStones=false;
+                setEnabled(false);
             }
         });
 
@@ -263,51 +299,51 @@ public class GameFrame extends JFrame implements GameMessageListener{
      * 3) images of fields occupied by black stones.
      */
     private void makeListsOfImages(){
-        ImageIcon leftSide = new ImageIcon("img/boklewy.png");
-        ImageIcon whiteLeftSide = new ImageIcon("img/boklewyBiały.png");
-        ImageIcon blackLeftSide = new ImageIcon("img/boklewyCzarny.png");
-        ImageIcon rightSide = new ImageIcon("img/bokprawy.png");
-        ImageIcon whiteRightSide = new ImageIcon("img/bokprawyBiały.png");
-        ImageIcon blackRightSide = new ImageIcon("img/bokprawyCzarny.png");
-        ImageIcon bottom = new ImageIcon("img/dół.png");
-        ImageIcon whiteBottom = new ImageIcon("img/dółBiały.png");
-        ImageIcon blackBottom = new ImageIcon("img/dółCzarny.png");
-        ImageIcon top = new ImageIcon("img/góra.png");
-        ImageIcon whiteTop = new ImageIcon("img/góraBiała.png");
-        ImageIcon blackTop = new ImageIcon("img/góraCzarna.png");
-        ImageIcon bottomLeftCorner = new ImageIcon("img/lewydolny.png");
-        ImageIcon whiteBottomLeftCorner = new ImageIcon("img/lewydolnyBiały.png");
-        ImageIcon blackBottomLeftCorner = new ImageIcon("img/lewydolnyCzarny.png");
-        ImageIcon topLeftCorner = new ImageIcon("img/lewygórny.png");
-        ImageIcon whiteTopLeftCorner = new ImageIcon("img/lewygórnyBiały.png");
-        ImageIcon blackTopLeftCorner = new ImageIcon("img/lewygórnyCzarny.png");
-        ImageIcon bottomRightCorner = new ImageIcon("img/prawydolny.png");
-        ImageIcon whiteBottomRightCorner = new ImageIcon("img/prawydolnyBiały.png");
-        ImageIcon blackBottomRightCorner = new ImageIcon("img/prawydolnyCzarny.png");
-        ImageIcon topRightCorner = new ImageIcon("img/prawygórny.png");
-        ImageIcon whiteTopRightCorner = new ImageIcon("img/prawygórnyBiały.png");
-        ImageIcon blackTopRightCorner = new ImageIcon("img/prawygórnyCzarny.png");
-        ImageIcon center = new ImageIcon("img/środek.png");
-        ImageIcon whiteCenter = new ImageIcon("img/środekBiały.png");
-        ImageIcon blackCenter= new ImageIcon("img/środekCzarny.png");
-        ImageIcon deadWhiteTopLeftCorner = new ImageIcon ("img/lewygórnyBiałyMartwy");
-        ImageIcon deadBlackTopLeftCorner = new ImageIcon("img/lewygórnyCzarnyMartwy");
-        ImageIcon deadWhiteTopRightCorner = new ImageIcon("img/prawygórnyBiałyMartwy");
-        ImageIcon deadBlackTopRightCorner = new ImageIcon("img/prawygórnyCzarnyMartwy");
-        ImageIcon deadWhiteBottomLeftCorner = new ImageIcon("img/lewydolnyBiałyMartwy");
-        ImageIcon deadBlackBottomLeftCorner = new ImageIcon("img/lewydolnyCzarnyMartwy");
-        ImageIcon deadWhiteBottomRightCorner = new ImageIcon("img/prawydolnyBiałyMartwy");
-        ImageIcon deadBlackBottomRightCorner = new ImageIcon("img/prawydolnyCzarnyMartwy");
-        ImageIcon deadWhiteTop = new ImageIcon("img/góraBiałyMartwy");
-        ImageIcon deadBlackTop = new ImageIcon("img/góraCzarnyMartwy");
-        ImageIcon deadWhiteBottom = new ImageIcon("img/dółBiałyMartwy");
-        ImageIcon deadBlackBottom = new ImageIcon("img/dółCzarnyMartwy");
-        ImageIcon deadWhiteCenter = new ImageIcon("img/środekBiałyMartwy");
-        ImageIcon deadBlackCenter = new ImageIcon("img/środekCzarnyMartwy");
-        ImageIcon deadWhiteLeftSide = new ImageIcon("img/boklewyBiałyMartwy");
-        ImageIcon deadBlackLeftSide = new ImageIcon("img/boklewyCzarnyMartwy");
-        ImageIcon deadWhiteRightSide = new ImageIcon("img/bokprawyBiałyMartwy");
-        ImageIcon deadBlackRightSide = new ImageIcon("img/bokprawyCzarnyMartwy");
+        FreeFieldsImg leftSide = new FreeFieldsImg("img/boklewy.png");
+        WhiteFieldsImg whiteLeftSide = new WhiteFieldsImg("img/boklewyBiały.png");
+        BlackFieldsImg blackLeftSide = new BlackFieldsImg("img/boklewyCzarny.png");
+        FreeFieldsImg rightSide = new FreeFieldsImg("img/bokprawy.png");
+        WhiteFieldsImg whiteRightSide = new WhiteFieldsImg("img/bokprawyBiały.png");
+        BlackFieldsImg blackRightSide = new BlackFieldsImg("img/bokprawyCzarny.png");
+        FreeFieldsImg bottom = new FreeFieldsImg("img/dół.png");
+        WhiteFieldsImg whiteBottom = new WhiteFieldsImg("img/dółBiały.png");
+        BlackFieldsImg blackBottom = new BlackFieldsImg("img/dółCzarny.png");
+        FreeFieldsImg top = new FreeFieldsImg("img/góra.png");
+        WhiteFieldsImg whiteTop = new WhiteFieldsImg("img/góraBiała.png");
+        BlackFieldsImg blackTop = new BlackFieldsImg("img/góraCzarna.png");
+        FreeFieldsImg bottomLeftCorner = new FreeFieldsImg("img/lewydolny.png");
+        WhiteFieldsImg whiteBottomLeftCorner = new WhiteFieldsImg("img/lewydolnyBiały.png");
+        BlackFieldsImg blackBottomLeftCorner = new BlackFieldsImg("img/lewydolnyCzarny.png");
+        FreeFieldsImg topLeftCorner = new FreeFieldsImg("img/lewygórny.png");
+        WhiteFieldsImg whiteTopLeftCorner = new WhiteFieldsImg("img/lewygórnyBiały.png");
+        BlackFieldsImg blackTopLeftCorner = new BlackFieldsImg("img/lewygórnyCzarny.png");
+        FreeFieldsImg bottomRightCorner = new FreeFieldsImg("img/prawydolny.png");
+        WhiteFieldsImg whiteBottomRightCorner = new WhiteFieldsImg("img/prawydolnyBiały.png");
+        BlackFieldsImg blackBottomRightCorner = new BlackFieldsImg("img/prawydolnyCzarny.png");
+        FreeFieldsImg topRightCorner = new FreeFieldsImg("img/prawygórny.png");
+        WhiteFieldsImg whiteTopRightCorner = new WhiteFieldsImg("img/prawygórnyBiały.png");
+        BlackFieldsImg blackTopRightCorner = new BlackFieldsImg("img/prawygórnyCzarny.png");
+        FreeFieldsImg center = new FreeFieldsImg("img/środek.png");
+        WhiteFieldsImg whiteCenter = new WhiteFieldsImg("img/środekBiały.png");
+        BlackFieldsImg blackCenter= new BlackFieldsImg("img/środekCzarny.png");
+        DeadWhiteFieldsImg deadWhiteTopLeftCorner = new DeadWhiteFieldsImg ("img/lewygórnyBiałyMartwy.png");
+        DeadBlackFieldsImg deadBlackTopLeftCorner = new DeadBlackFieldsImg("img/lewygórnyCzarnyMartwy.png");
+        DeadWhiteFieldsImg deadWhiteTopRightCorner = new DeadWhiteFieldsImg("img/prawygórnyBiałyMartwy.png");
+        DeadBlackFieldsImg deadBlackTopRightCorner = new DeadBlackFieldsImg("img/prawygórnyCzarnyMartwy.png");
+        DeadWhiteFieldsImg deadWhiteBottomLeftCorner = new DeadWhiteFieldsImg("img/lewydolnyBiałyMartwy.png");
+        DeadBlackFieldsImg deadBlackBottomLeftCorner = new DeadBlackFieldsImg("img/lewydolnyCzarnyMartwy.png");
+        DeadWhiteFieldsImg deadWhiteBottomRightCorner = new DeadWhiteFieldsImg("img/prawydolnyBiałyMartwy.png");
+        DeadBlackFieldsImg deadBlackBottomRightCorner = new DeadBlackFieldsImg("img/prawydolnyCzarnyMartwy.png");
+        DeadWhiteFieldsImg deadWhiteTop = new DeadWhiteFieldsImg("img/góraBiałyMartwy.png");
+        DeadBlackFieldsImg deadBlackTop = new DeadBlackFieldsImg("img/góraCzarnyMartwy.png");
+        DeadWhiteFieldsImg deadWhiteBottom = new DeadWhiteFieldsImg("img/dółBiałyMartwy.png");
+        DeadBlackFieldsImg deadBlackBottom = new DeadBlackFieldsImg("img/dółCzarnyMartwy.png");
+        DeadWhiteFieldsImg deadWhiteCenter = new DeadWhiteFieldsImg("img/środekBiałyMartwy.png");
+        DeadBlackFieldsImg deadBlackCenter = new DeadBlackFieldsImg("img/środekCzarnyMartwy.png");
+        DeadWhiteFieldsImg deadWhiteLeftSide = new DeadWhiteFieldsImg("img/boklewyBiałyMartwy.png");
+        DeadBlackFieldsImg deadBlackLeftSide = new DeadBlackFieldsImg("img/boklewyCzarnyMartwy.png");
+        DeadWhiteFieldsImg deadWhiteRightSide = new DeadWhiteFieldsImg("img/bokprawyBiałyMartwy.png");
+        DeadBlackFieldsImg deadBlackRightSide = new DeadBlackFieldsImg("img/bokprawyCzarnyMartwy.png");
 
         freeFieldsImg[0][0] = topLeftCorner;
         whiteFieldsImg[0][0] = whiteTopLeftCorner;
@@ -439,16 +475,12 @@ public class GameFrame extends JFrame implements GameMessageListener{
 
                 if (updatedBoard[i][j].equals("FREE")){
                     fields[i][j].setIcon(freeFieldsImg[i][j]);
-                    fields[i][j].setColor("FREE");
                 }
                 else if (updatedBoard[i][j].equals("BLACK")){
-                    fields[i][j].setIcon(deadBlackFieldsImg[i][j]);
-
-                    fields[i][j].setColor("BLACK");
+                    fields[i][j].setIcon(blackFieldsImg[i][j]);
                 }
                 else if (updatedBoard[i][j].equals("WHITE")){
                     fields[i][j].setIcon(whiteFieldsImg[i][j]);
-                    fields[i][j].setColor("WHITE");
                 }
             }
         }
@@ -491,22 +523,24 @@ public class GameFrame extends JFrame implements GameMessageListener{
                 }
             }
         }
+        infoLabel.setText("DO YOU ACCEPT?");
     }
 
     /**
      * Class of label treated like field.
      */
     private class FieldLabel extends JLabel{
-        String color;
+        ImageIcon icon;
         int x;
         int y;
 
-        public void setColor(String color){
-            this.color = color;
+        public void setIcon(ImageIcon icon){
+            super.setIcon(icon);
+            this.icon = icon;
         }
 
-        public String getColor(){
-            return color;
+        public ImageIcon getIcon(){
+            return icon;
         }
 
         public void setClickedX(int x){
