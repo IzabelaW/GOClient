@@ -208,8 +208,7 @@ public class GameFrame extends JFrame implements GameMessageListener{
                 infoLabel.setText("Mark dead stones!");
                 deleteAcceptedDeadStones();
                 myPresenter.sendInfoDeadStonesAccepted();
-                ifMarkDeadStones=true;
-                setVisible(false);
+                acceptButton.setVisible(false);
                 notAcceptButton.setVisible(false);
 
             }
@@ -221,7 +220,7 @@ public class GameFrame extends JFrame implements GameMessageListener{
                 MyPresenter myPresenter = MyPresenter.INSTANCE;
                 myPresenter.sendInfoDeadStonesNotAccepted();
                 deleteNotAcceptedDeadStones();
-                setEnabled(false);
+                notAcceptButton.setEnabled(false);
             }
         });
 
@@ -272,7 +271,7 @@ public class GameFrame extends JFrame implements GameMessageListener{
                 }
                 infoLabel.setText("<html>Wait for your opponent<br/>to accept it.</html>.");
                 ifMarkDeadStones = false;
-                setEnabled(false);
+                suggestButton.setEnabled(false);
             }
         });
 
@@ -518,9 +517,9 @@ public class GameFrame extends JFrame implements GameMessageListener{
 
     @Override
     public void markDeadStones(){
-        JOptionPane.showMessageDialog(null, "Opponent has also passed. Mark his dead stones.");
+        JOptionPane.showMessageDialog(null, "Mark dead stones of your opponent.");
         passButton.setEnabled(false);
-        ifMarkDeadStones =true;
+        ifMarkDeadStones = true;
         suggestButton.setVisible(true);
 
     }
@@ -546,8 +545,12 @@ public class GameFrame extends JFrame implements GameMessageListener{
 
     @Override
     public void deadStonesAccepted(){
+        MyPresenter myPresenter = MyPresenter.INSTANCE;
         JOptionPane.showMessageDialog(null, "<html>Opponent accepted your suggestion!<br/>Wait for him to mark dead stones.</html>");
         deleteAcceptedDeadStones();
+        myPresenter.sendInfo("MARK_DEAD");
+        infoLabel.setText("<html>Wait for the opponent<br/>to mark your dead stones.</html>");
+
     }
 
     @Override
@@ -555,6 +558,8 @@ public class GameFrame extends JFrame implements GameMessageListener{
         JOptionPane.showMessageDialog(null, "<html>Opponent didn't accept your suggestion.<br/>Mark his dead stones again!.</html>");
         deleteNotAcceptedDeadStones();
         ifMarkDeadStones = true;
+        infoLabel.setText("Mark dead stones again.");
+        suggestButton.setEnabled(true);
 
     }
 

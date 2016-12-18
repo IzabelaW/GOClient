@@ -88,6 +88,10 @@ public enum MyPresenter {
         game.sendResponse("PASS");
     }
 
+    public void sendInfo(String info) {
+        game.sendResponse(info);
+    }
+
     public void sendFieldsMarkedAsDead(boolean[][] fieldsMarkedAsDead){
         ArrayList<String> marked = new ArrayList<>();
 
