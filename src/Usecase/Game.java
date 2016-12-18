@@ -27,7 +27,7 @@ public class Game {
 
     public Game() throws IOException {
 
-        InetAddress addr = InetAddress.getByName("78.8.246.0");
+        InetAddress addr = InetAddress.getByName("192.168.1.4");
         socket = new Socket(addr, 8901);
         in = new BufferedReader(new InputStreamReader(
                 socket.getInputStream()));
