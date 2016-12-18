@@ -31,4 +31,8 @@ public interface GameMessageListener {
 
     void showMarkedAsDead(String[][] markedAsDead);
 
+    void deadStonesAccepted();
+
+    void deadStonesNotAccepted();
+
 }

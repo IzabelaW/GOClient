@@ -99,6 +99,14 @@ public enum MyPresenter {
         game.sendResponse("MARKED_AS_DEAD: " + marked);
     }
 
+    public void sendInfoDeadStonesAccepted(){
+        game.sendResponse("DEAD_STONES_ACCEPTED");
+    }
+
+    public void sendInfoDeadStonesNotAccepted(){
+        game.sendResponse("DEAD_STONES_NOT_ACCEPTED");
+    }
+
     /**
      * Receives info about indexes of existing rooms from server.
      * @return - info about indexes of existing rooms
@@ -178,21 +186,21 @@ public enum MyPresenter {
                 } else if (response.startsWith("UPDATED_BOARD ")) {
                     String[][] updatedBoard = receiveUpdatedBoard(response);
                     listener.updateBoard(updatedBoard);
-                }
-                else if(response.startsWith("CAPTURED")){
+                } else if(response.startsWith("CAPTURED")){
                     String string = response.replace("CAPTURED ", "");
                     String[] captured = string.split(",");
                     listener.updateCaptured(captured[0], captured[1]);
-                }
-                else if (response.equals("WAIT_FOR_MARKING_DEAD")){
+                } else if (response.equals("WAIT_FOR_MARKING_DEAD")){
                     listener.waitForOpponentToMarkDeadStones();
-                }
-                else if (response.equals("MARK_DEAD")){
+                } else if (response.equals("MARK_DEAD")){
                     listener.markDeadStones();
-                }
-                else if (response.startsWith("MARKED_AS_DEAD: ")){
+                } else if (response.startsWith("MARKED_AS_DEAD: ")){
                     String[][] markedAsDead = receiveUpdatedBoard(response);
                     listener.showMarkedAsDead(markedAsDead);
+                } else if (response.equals("DEAD_STONES_ACCEPTED")){
+                    listener.deadStonesAccepted();
+                } else if (response.equals("DEAD_STONES_NOT_ACCEPTED")){
+                    listener.deadStonesNotAccepted();
                 }
             }
 

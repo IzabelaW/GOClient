@@ -200,11 +200,17 @@ public class GameFrame extends JFrame implements GameMessageListener{
         acceptDeadStonesPanel.add(notAcceptButton);
         acceptButton.setVisible(false);
         notAcceptButton.setVisible(false);
-        rightPanel.add(acceptDeadStonesPanel);
 
         acceptButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                MyPresenter myPresenter = MyPresenter.INSTANCE;
+                infoLabel.setText("Mark dead stones!");
+                deleteAcceptedDeadStones();
+                myPresenter.sendInfoDeadStonesAccepted();
+                ifMarkDeadStones=true;
+                setVisible(false);
+                notAcceptButton.setVisible(false);
 
             }
         });
@@ -212,7 +218,10 @@ public class GameFrame extends JFrame implements GameMessageListener{
         notAcceptButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                MyPresenter myPresenter = MyPresenter.INSTANCE;
+                myPresenter.sendInfoDeadStonesNotAccepted();
+                deleteNotAcceptedDeadStones();
+                setEnabled(false);
             }
         });
 
@@ -229,6 +238,7 @@ public class GameFrame extends JFrame implements GameMessageListener{
         rightPanel.add(myCapturedLabel);
         rightPanel.add(myNumberOfCaptured);
         rightPanel.add(infoLabel);
+        rightPanel.add(acceptDeadStonesPanel);
         rightPanel.add(myEmptyLabel);
 
     }
@@ -245,7 +255,7 @@ public class GameFrame extends JFrame implements GameMessageListener{
                 MyPresenter myPresenter = MyPresenter.INSTANCE;
                 myPresenter.playerPassed();
                 passButton.setEnabled(false);
-                infoLabel.setText("OPPONENT'S TURN!");
+                infoLabel.setText("Opponent's turn!");
                 myTurn=false;
             }
         });
@@ -260,7 +270,8 @@ public class GameFrame extends JFrame implements GameMessageListener{
                         markedAsDead[i][j] = false;
                     }
                 }
-                ifMarkDeadStones=false;
+                infoLabel.setText("<html>Wait for your opponent<br/>to accept it.</html>.");
+                ifMarkDeadStones = false;
                 setEnabled(false);
             }
         });
@@ -280,14 +291,14 @@ public class GameFrame extends JFrame implements GameMessageListener{
 
     public void opponentJoined(String login){
         opponentLoginLabel.setText(login);
-        infoLabel.setText("OPPONENT'S TURN!");
+        infoLabel.setText("Opponent's turn!");
         JOptionPane.showMessageDialog(null, "Opponent joined. Let's start the game!");
     }
 
     public void joinToRoom(String initiatorLogin){
         playerColor = "BLACK";
         opponentLoginLabel.setText(initiatorLogin);
-        infoLabel.setText("YOUR TURN!");
+        infoLabel.setText("Your turn!");
         passButton.setEnabled(true);
 
     }
@@ -498,12 +509,14 @@ public class GameFrame extends JFrame implements GameMessageListener{
         }
     }
 
+    @Override
     public void waitForOpponentToMarkDeadStones(){
         infoLabel.setText("<html>Wait for opponent <br/>to mark dead stones!</html>");
         passButton.setEnabled(false);
         ifMarkDeadStones =false;
     }
 
+    @Override
     public void markDeadStones(){
         JOptionPane.showMessageDialog(null, "Opponent has also passed. Mark his dead stones.");
         passButton.setEnabled(false);
@@ -512,6 +525,7 @@ public class GameFrame extends JFrame implements GameMessageListener{
 
     }
 
+    @Override
     public void showMarkedAsDead(String[][] markedAsDead){
         for(int i = 0; i < 19; i++){
             for(int j = 0; j < 19; j++){
@@ -523,7 +537,45 @@ public class GameFrame extends JFrame implements GameMessageListener{
                 }
             }
         }
-        infoLabel.setText("DO YOU ACCEPT?");
+        infoLabel.setText("Do you accept?");
+        acceptButton.setVisible(true);
+        notAcceptButton.setVisible(true);
+        acceptButton.setEnabled(true);
+        notAcceptButton.setEnabled(true);
+    }
+
+    @Override
+    public void deadStonesAccepted(){
+        JOptionPane.showMessageDialog(null, "<html>Opponent accepted your suggestion!<br/>Wait for him to mark dead stones.</html>");
+        deleteAcceptedDeadStones();
+    }
+
+    @Override
+    public void deadStonesNotAccepted(){
+        JOptionPane.showMessageDialog(null, "<html>Opponent didn't accept your suggestion.<br/>Mark his dead stones again!.</html>");
+        deleteNotAcceptedDeadStones();
+        ifMarkDeadStones = true;
+
+    }
+
+    private void deleteNotAcceptedDeadStones(){
+        for (int i = 0; i < 19; i++){
+            for (int j = 0; j < 19; j++){
+                if (fields[i][j].getIcon() instanceof DeadBlackFieldsImg)
+                    fields[i][j].setIcon(blackFieldsImg[i][j]);
+                else if (fields[i][j].getIcon() instanceof DeadWhiteFieldsImg)
+                    fields[i][j].setIcon(whiteFieldsImg[i][j]);
+            }
+        }
+    }
+
+    private void deleteAcceptedDeadStones(){
+        for(int i = 0; i < 19; i++){
+            for(int j = 0; j < 19; j++){
+                if(fields[i][j].getIcon() instanceof DeadWhiteFieldsImg || fields[i][j].getIcon() instanceof DeadBlackFieldsImg)
+                    fields[i][j].setIcon(freeFieldsImg[i][j]);
+            }
+        }
     }
 
     /**
