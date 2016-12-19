@@ -208,7 +208,6 @@ public class GameFrame extends JFrame implements GameMessageListener{
                                 MyPresenter myPresenter = MyPresenter.INSTANCE;
                                 FieldLabel label = (FieldLabel) e.getSource();
                                 if(label.getIcon() instanceof FreeFieldsImg) {
-                                    System.out.println("klik");
                                     myPresenter.sendInfo("AREA: " + label.getClickedX() + " " + label.getClickedY());
                                 }
                             }
@@ -728,7 +727,10 @@ public class GameFrame extends JFrame implements GameMessageListener{
     public void showMarkedArea(String[][] markedArea){
         for(int i = 0; i < 19; i++){
             for(int j = 0; j < 19; j++){
-                if(!markedArea[i][j].equals("0")) {
+                if(!markedArea[i][j].equals("0") && playerColor.equals("BLACK")) {
+                    fields[i][j].setIcon(blackMarkedFieldsImg[i][j]);
+                    this.markedArea[i][j] = true;
+                } else if (!markedArea[i][j].equals("0") && playerColor.equals("WHITE")){
                     fields[i][j].setIcon(whiteMarkedFieldsImg[i][j]);
                     this.markedArea[i][j] = true;
                 }
@@ -771,8 +773,9 @@ public class GameFrame extends JFrame implements GameMessageListener{
         for (int i = 0; i < 19; i++){
             for (int j = 0; j < 19; j++){
                 if ((fields[i][j].getIcon() instanceof WhiteMarkedFieldsImg && playerColor.equals("WHITE"))
-                        || (fields[i][j].getIcon() instanceof BlackMarkedFieldsImg && playerColor.equals("BLACK")))
+                        || (fields[i][j].getIcon() instanceof BlackMarkedFieldsImg && playerColor.equals("BLACK"))) {
                     fields[i][j].setIcon(freeFieldsImg[i][j]);
+                }
             }
         }
     }
@@ -781,8 +784,9 @@ public class GameFrame extends JFrame implements GameMessageListener{
         for (int i = 0; i < 19; i++){
             for (int j = 0; j < 19; j++){
                 if ((fields[i][j].getIcon() instanceof WhiteMarkedFieldsImg && playerColor.equals("BLACK"))
-                        || (fields[i][j].getIcon() instanceof BlackMarkedFieldsImg && playerColor.equals("WHITE")))
+                        || (fields[i][j].getIcon() instanceof BlackMarkedFieldsImg && playerColor.equals("WHITE"))) {
                     fields[i][j].setIcon(freeFieldsImg[i][j]);
+                }
             }
         }
     }
