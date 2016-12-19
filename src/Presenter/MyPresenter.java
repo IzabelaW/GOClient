@@ -142,9 +142,12 @@ public enum MyPresenter {
             String response1 = response.replace("UPDATED_BOARD [", "");
             response2 = response1.replace("]", "");
         }
-        else  {
+        else if (response.startsWith("MARKED_AS_DEAD: ")) {
             String response1 = response.replace("MARKED_AS_DEAD: [", "");
             response2 = response1.replace("]", "");
+        } else {
+            String response1 = response.replace("MARKED_AREA: [","");
+            response2 = response1.replace("]","");
         }
 
         responseBoard = response2.split(", ");
@@ -205,6 +208,11 @@ public enum MyPresenter {
                     listener.deadStonesAccepted();
                 } else if (response.equals("DEAD_STONES_NOT_ACCEPTED")){
                     listener.deadStonesNotAccepted();
+                } else if (response.equals("MARK_AREA")){
+                    listener.markArea();
+                } else if (response.startsWith("MARKED_AREA: ")){
+                    String[][] markedArea = receiveUpdatedBoard(response);
+                    listener.showMarkedArea(markedArea);
                 }
             }
 

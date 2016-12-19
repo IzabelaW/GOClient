@@ -35,4 +35,8 @@ public interface GameMessageListener {
 
     void deadStonesNotAccepted();
 
+    void markArea();
+
+    void showMarkedArea(String[][] markedArea);
+
 }
