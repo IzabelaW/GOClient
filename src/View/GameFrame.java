@@ -595,8 +595,8 @@ public class GameFrame extends JFrame implements GameMessageListener{
         ifOpponentAccepted = true;
         MyPresenter myPresenter = MyPresenter.INSTANCE;
         if (ifAccepted && ifOpponentAccepted){
-            myPresenter.sendUpdatedBoard(fields);
             deleteAcceptedDeadStones();
+            myPresenter.sendUpdatedBoard(fields);
             infoLabel.setText("<html>Wait for the opponent<br/>to mark his area.</html>");
         }
         else {
