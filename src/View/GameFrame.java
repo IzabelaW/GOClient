@@ -3,7 +3,6 @@ package View;
 import Presenter.MyPresenter;
 import View.ImageIcon.*;
 import View.Listener.GameMessageListener;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 
 import javax.swing.*;
 import java.awt.*;
@@ -280,7 +279,7 @@ public class GameFrame extends JFrame implements GameMessageListener{
                 } else if(ifTimeToAcceptArea){
                     MyPresenter myPresenter = MyPresenter.INSTANCE;
                     myPresenter.sendInfo("AREA_NOT_ACCEPTED");
-                    deleteNotAcceptedArea();
+                    deleteOpponentNotAcceptedArea();
                     ifTimeToAcceptArea = false;
                 }
                 notAcceptButton.setEnabled(false);
@@ -764,14 +763,25 @@ public class GameFrame extends JFrame implements GameMessageListener{
     public void areaNotAccepted(){
         infoLabel.setText("<html>Opponent didn't accept your suggestion.<br/>Mark your area again!</html>");
         suggestButton.setEnabled(true);
-        deleteNotAcceptedArea();
+        deleteMyNotAcceptedArea();
         ifMarkArea = true;
     }
 
-    private void deleteNotAcceptedArea(){
+    private void deleteMyNotAcceptedArea(){
         for (int i = 0; i < 19; i++){
             for (int j = 0; j < 19; j++){
-                if (fields[i][j].getIcon() instanceof WhiteMarkedFieldsImg || fields[i][j].getIcon() instanceof BlackMarkedFieldsImg)
+                if ((fields[i][j].getIcon() instanceof WhiteMarkedFieldsImg && playerColor.equals("WHITE"))
+                        || (fields[i][j].getIcon() instanceof BlackMarkedFieldsImg && playerColor.equals("BLACK")))
+                    fields[i][j].setIcon(freeFieldsImg[i][j]);
+            }
+        }
+    }
+
+    public void deleteOpponentNotAcceptedArea(){
+        for (int i = 0; i < 19; i++){
+            for (int j = 0; j < 19; j++){
+                if ((fields[i][j].getIcon() instanceof WhiteMarkedFieldsImg && playerColor.equals("BLACK"))
+                        || (fields[i][j].getIcon() instanceof BlackMarkedFieldsImg && playerColor.equals("WHITE")))
                     fields[i][j].setIcon(freeFieldsImg[i][j]);
             }
         }
