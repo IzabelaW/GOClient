@@ -228,7 +228,7 @@ public enum MyPresenter {
                     listener.deadStonesAccepted();
                 } else if (response.equals("DEAD_STONES_NOT_ACCEPTED")){
                     listener.deadStonesNotAccepted();
-                } else if (response.equals("MARK_AREA")){
+                } else if (response.startsWith("MARK_AREA ")){
                     listener.markArea();
                 } else if (response.startsWith("MARKED_AREA: ")){
                     String[][] markedArea = receiveUpdatedBoard(response);
