@@ -252,6 +252,10 @@ public class GameFrame extends JFrame implements GameMessageListener{
                     infoLabel.setText("Mark dead stones!");
                     deleteAcceptedDeadStones();
                     myPresenter.sendInfo("DEAD_STONES_ACCEPTED");
+                    if (ifAccepted && ifOpponentAccepted){
+                        ifAccepted = false;
+                        ifOpponentAccepted = false;
+                    }
                     ifTimeToAcceptDeadFields = false;
                 } else if(ifTimeToAcceptArea){
                     ifAccepted = true;
@@ -260,10 +264,12 @@ public class GameFrame extends JFrame implements GameMessageListener{
                     MyPresenter myPresenter = MyPresenter.INSTANCE;
                     infoLabel.setText("Mark your area!");
                     myPresenter.sendInfo("AREA_ACCEPTED");
-                    ifTimeToAcceptArea = false;
                     if(ifOpponentAccepted && ifAccepted){
                         checkScore();
+                        ifAccepted = false;
+                        ifOpponentAccepted = false;
                     }
+                    ifTimeToAcceptArea = false;
                 }
                 acceptButton.setVisible(false);
                 notAcceptButton.setVisible(false);
