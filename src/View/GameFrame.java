@@ -436,15 +436,15 @@ public class GameFrame extends JFrame implements GameMessageListener{
         WhiteMarkedFieldsImg whiteMarkedBottomRightCorner = new WhiteMarkedFieldsImg("img/prawydolnyzielony.png");
         WhiteMarkedFieldsImg whiteMarkedTopRightCorner = new WhiteMarkedFieldsImg("img/prawygórnyzielony.png");
         WhiteMarkedFieldsImg whiteMarkedCenter = new WhiteMarkedFieldsImg("img/środekzielony.png");
-        BlackMarkedFieldsImg blackMarkedLeftSide = new BlackMarkedFieldsImg("img/boklewyzielony.png");
-        BlackMarkedFieldsImg blackMarkedRightSide = new BlackMarkedFieldsImg("img/bokprawyzielony.png");
-        BlackMarkedFieldsImg blackMarkedBottom = new BlackMarkedFieldsImg("img/dółzielony.png");
-        BlackMarkedFieldsImg blackMarkedTop = new BlackMarkedFieldsImg("img/górazielony.png");
-        BlackMarkedFieldsImg blackMarkedBottomLeftCorner = new BlackMarkedFieldsImg("img/lewydolnyzielony.png");
-        BlackMarkedFieldsImg blackMarkedTopLeftCorner = new BlackMarkedFieldsImg("img/lewygórnyzielony.png");
-        BlackMarkedFieldsImg blackMarkedBottomRightCorner = new BlackMarkedFieldsImg("img/prawydolnyzielony.png");
-        BlackMarkedFieldsImg blackMarkedTopRightCorner = new BlackMarkedFieldsImg("img/prawygórnyzielony.png");
-        BlackMarkedFieldsImg blackMarkedCenter = new BlackMarkedFieldsImg("img/środekzielony.png");
+        BlackMarkedFieldsImg blackMarkedLeftSide = new BlackMarkedFieldsImg("img/boklewyszary.png");
+        BlackMarkedFieldsImg blackMarkedRightSide = new BlackMarkedFieldsImg("img/bokprawyszary.png");
+        BlackMarkedFieldsImg blackMarkedBottom = new BlackMarkedFieldsImg("img/dółszary.png");
+        BlackMarkedFieldsImg blackMarkedTop = new BlackMarkedFieldsImg("img/góraszary.png");
+        BlackMarkedFieldsImg blackMarkedBottomLeftCorner = new BlackMarkedFieldsImg("img/lewydolnyszary.png");
+        BlackMarkedFieldsImg blackMarkedTopLeftCorner = new BlackMarkedFieldsImg("img/lewygórnyszary.png");
+        BlackMarkedFieldsImg blackMarkedBottomRightCorner = new BlackMarkedFieldsImg("img/prawydolnyszary.png");
+        BlackMarkedFieldsImg blackMarkedTopRightCorner = new BlackMarkedFieldsImg("img/prawygórnyszary.png");
+        BlackMarkedFieldsImg blackMarkedCenter = new BlackMarkedFieldsImg("img/środekszary.png");
 
         freeFieldsImg[0][0] = topLeftCorner;
         whiteFieldsImg[0][0] = whiteTopLeftCorner;
