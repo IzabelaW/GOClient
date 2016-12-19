@@ -743,8 +743,10 @@ public class GameFrame extends JFrame implements GameMessageListener{
         ifTimeToAcceptArea = true;
         for(int i = 0; i < 19; i++){
             for(int j = 0; j < 19; j++){
-                if(markedArea[i][j].equals("true"))
+                if(markedArea[i][j].equals("true") && playerColor.equals("BLACK"))
                     fields[i][j].setIcon(whiteMarkedFieldsImg[i][j]);
+                else if(markedArea[i][j].equals("true") && playerColor.equals("WHITE"))
+                    fields[i][j].setIcon(blackMarkedFieldsImg[i][j]);
             }
         }
 
