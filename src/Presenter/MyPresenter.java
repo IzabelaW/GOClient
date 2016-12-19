@@ -1,8 +1,13 @@
 package Presenter;
 
 import Usecase.Game;
+import View.GameFrame;
+import View.ImageIcon.BlackFieldsImg;
+import View.ImageIcon.FreeFieldsImg;
+import View.ImageIcon.WhiteFieldsImg;
 import View.Listener.GameMessageListener;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -109,6 +114,21 @@ public enum MyPresenter {
 
     public void sendInfoDeadStonesNotAccepted(){
         game.sendResponse("DEAD_STONES_NOT_ACCEPTED");
+    }
+
+    public void sendUpdatedBoard(GameFrame.FieldLabel[][] updatedBoard){
+        ArrayList<String> updatedBoardToString = new ArrayList<>();
+        for(int i = 0; i < 19; i++) {
+            for (int j = 0; j < 19; j++) {
+                if (updatedBoard[i][j].getIcon() instanceof BlackFieldsImg)
+                    updatedBoardToString.add("BLACK");
+                else if (updatedBoard[i][j].getIcon() instanceof WhiteFieldsImg)
+                    updatedBoardToString.add("WHITE");
+                else if (updatedBoard[i][j].getIcon() instanceof FreeFieldsImg)
+                    updatedBoardToString.add("FREE");
+            }
+        }
+        game.sendResponse("MARK_AREA " + updatedBoardToString);
     }
 
     /**

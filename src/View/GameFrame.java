@@ -191,8 +191,10 @@ public class GameFrame extends JFrame implements GameMessageListener{
                             } else if(ifMarkArea){
                                 MyPresenter myPresenter = MyPresenter.INSTANCE;
                                 FieldLabel label = (FieldLabel) e.getSource();
-                                if(label.getIcon() instanceof FreeFieldsImg)
+                                if(label.getIcon() instanceof FreeFieldsImg) {
+                                    System.out.println("klik");
                                     myPresenter.sendInfo("AREA: " + label.getClickedX() + " " + label.getClickedY());
+                                }
                             }
                     }
                 });
@@ -593,7 +595,7 @@ public class GameFrame extends JFrame implements GameMessageListener{
         ifOpponentAccepted = true;
         MyPresenter myPresenter = MyPresenter.INSTANCE;
         if (ifAccepted && ifOpponentAccepted){
-            myPresenter.sendInfo("MARK_AREA");
+            myPresenter.sendUpdatedBoard(fields);
             deleteAcceptedDeadStones();
             infoLabel.setText("<html>Wait for the opponent<br/>to mark his area.</html>");
         }
@@ -659,7 +661,7 @@ public class GameFrame extends JFrame implements GameMessageListener{
     public void showMarkedArea(String[][] markedArea){
         for(int i = 0; i < 19; i++){
             for(int j = 0; j < 19; j++){
-                if(markedArea[i][j].equals("1"))
+                if(!markedArea[i][j].equals("0"))
                     fields[i][j].setIcon(markedFieldsImg[i][j]);
             }
         }
@@ -668,7 +670,7 @@ public class GameFrame extends JFrame implements GameMessageListener{
     /**
      * Class of label treated like field.
      */
-    private class FieldLabel extends JLabel{
+    public class FieldLabel extends JLabel{
         ImageIcon icon;
         int x;
         int y;
