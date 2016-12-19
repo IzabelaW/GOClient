@@ -145,6 +145,8 @@ public class GameFrame extends JFrame implements GameMessageListener{
      */
     private Boolean ifMarkArea = false;
 
+    private Boolean ifOpponentPassed = false;
+
 
     public GameFrame()  {
 
@@ -487,7 +489,9 @@ public class GameFrame extends JFrame implements GameMessageListener{
     public void playerReceivedPermissionToMove() {
         myTurn = true;
         passButton.setEnabled(true);
-        infoLabel.setText("Your turn!");
+        if(!ifOpponentPassed)
+            infoLabel.setText("Your turn!");
+        ifOpponentPassed = false;
     }
 
     @Override
@@ -514,6 +518,7 @@ public class GameFrame extends JFrame implements GameMessageListener{
 
     @Override
     public void opponentPassed() {
+        ifOpponentPassed = true;
         myTurn = true;
         passButton.setEnabled(true);
         infoLabel.setText("Opponent passed. Your turn!");
