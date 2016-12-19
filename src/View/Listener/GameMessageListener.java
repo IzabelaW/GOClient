@@ -40,4 +40,8 @@ public interface GameMessageListener {
     void showMarkedArea(String[][] markedArea);
 
     void showFinalMarkedArea(String[][] markedArea);
+
+    void areaAccepted();
+
+    void areaNotAccepted();
 }

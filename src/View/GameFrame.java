@@ -3,6 +3,7 @@ package View;
 import Presenter.MyPresenter;
 import View.ImageIcon.*;
 import View.Listener.GameMessageListener;
+import com.sun.org.apache.xpath.internal.operations.Bool;
 
 import javax.swing.*;
 import java.awt.*;
@@ -157,6 +158,10 @@ public class GameFrame extends JFrame implements GameMessageListener{
 
     private Boolean ifOpponentPassed = false;
 
+    private Boolean ifTimeToAcceptDeadFields = false;
+
+    private Boolean ifTimeToAcceptArea = false;
+
 
     public GameFrame()  {
 
@@ -243,11 +248,20 @@ public class GameFrame extends JFrame implements GameMessageListener{
         acceptButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ifAccepted = true;
-                MyPresenter myPresenter = MyPresenter.INSTANCE;
-                infoLabel.setText("Mark dead stones!");
-                deleteAcceptedDeadStones();
-                myPresenter.sendInfoDeadStonesAccepted();
+                if(ifTimeToAcceptDeadFields) {
+                    ifAccepted = true;
+                    MyPresenter myPresenter = MyPresenter.INSTANCE;
+                    infoLabel.setText("Mark dead stones!");
+                    deleteAcceptedDeadStones();
+                    myPresenter.sendInfo("DEAD_STONES_ACCEPTED");
+                    ifTimeToAcceptDeadFields = false;
+                } else if(ifTimeToAcceptArea){
+                    ifMarkArea = true;
+                    MyPresenter myPresenter = MyPresenter.INSTANCE;
+                    infoLabel.setText("Mark your area!");
+                    myPresenter.sendInfo("AREA_ACCEPTED");
+                    ifTimeToAcceptArea = false;
+                }
                 acceptButton.setVisible(false);
                 notAcceptButton.setVisible(false);
 
@@ -257,9 +271,17 @@ public class GameFrame extends JFrame implements GameMessageListener{
         notAcceptButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                MyPresenter myPresenter = MyPresenter.INSTANCE;
-                myPresenter.sendInfoDeadStonesNotAccepted();
-                deleteNotAcceptedDeadStones();
+                if(ifTimeToAcceptDeadFields) {
+                    MyPresenter myPresenter = MyPresenter.INSTANCE;
+                    myPresenter.sendInfo("DEAD_STONES_NOT_ACCEPTED");
+                    deleteNotAcceptedDeadStones();
+                    ifTimeToAcceptDeadFields = false;
+                } else if(ifTimeToAcceptArea){
+                    ifMarkDeadStones = true;
+                    MyPresenter myPresenter = MyPresenter.INSTANCE;
+                    myPresenter.sendInfo("AREA_NOT_ACCEPTED");
+                    ifTimeToAcceptArea = false;
+                }
                 notAcceptButton.setEnabled(false);
                 acceptButton.setEnabled(false);
             }
@@ -616,6 +638,7 @@ public class GameFrame extends JFrame implements GameMessageListener{
 
     @Override
     public void showMarkedAsDead(String[][] markedAsDead){
+        ifTimeToAcceptDeadFields = true;
         for(int i = 0; i < 19; i++){
             for(int j = 0; j < 19; j++){
                 if(markedAsDead[i][j].equals("true")){
@@ -698,26 +721,28 @@ public class GameFrame extends JFrame implements GameMessageListener{
     public void markArea() {
         ifMarkArea = true;
         infoLabel.setText("Mark your area.");
+        suggestButton.setEnabled(true);
     }
 
     @Override
     public void showMarkedArea(String[][] markedArea){
         for(int i = 0; i < 19; i++){
             for(int j = 0; j < 19; j++){
-                if(!markedArea[i][j].equals("0"))
+                if(!markedArea[i][j].equals("0")) {
                     fields[i][j].setIcon(whiteMarkedFieldsImg[i][j]);
                     this.markedArea[i][j] = true;
+                }
             }
         }
     }
 
     @Override
     public void showFinalMarkedArea(String[][] markedArea){
+        ifTimeToAcceptArea = true;
         for(int i = 0; i < 19; i++){
             for(int j = 0; j < 19; j++){
-                if(!markedArea[i][j].equals("0"))
+                if(markedArea[i][j].equals("true"))
                     fields[i][j].setIcon(whiteMarkedFieldsImg[i][j]);
-                this.markedArea[i][j] = true;
             }
         }
 
@@ -726,6 +751,18 @@ public class GameFrame extends JFrame implements GameMessageListener{
         notAcceptButton.setVisible(true);
         acceptButton.setEnabled(true);
         notAcceptButton.setEnabled(true);
+    }
+
+    @Override
+    public void areaAccepted(){
+        infoLabel.setText("<html>Wait for the opponent<br/>to mark his area.</html>");
+        ifMarkArea = false;
+    }
+
+    @Override
+    public void areaNotAccepted(){
+        infoLabel.setText("<html>Opponent didn't accept your suggestion.<br/>Mark your area again!.</html>");
+        ifMarkArea = true;
     }
 
     /**

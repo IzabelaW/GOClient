@@ -118,13 +118,6 @@ public enum MyPresenter {
         }
         game.sendResponse("FINAL_MARKED_AS_AREA: " + marked);
     }
-    public void sendInfoDeadStonesAccepted(){
-        game.sendResponse("DEAD_STONES_ACCEPTED");
-    }
-
-    public void sendInfoDeadStonesNotAccepted(){
-        game.sendResponse("DEAD_STONES_NOT_ACCEPTED");
-    }
 
     public void sendUpdatedBoard(GameFrame.FieldLabel[][] updatedBoard){
         ArrayList<String> updatedBoardToString = new ArrayList<>();
@@ -249,6 +242,10 @@ public enum MyPresenter {
                 } else if (response.startsWith("FINAL_MARKED_AS_AREA: ")){
                     String[][] markedArea = receiveUpdatedBoard(response);
                     listener.showFinalMarkedArea(markedArea);
+                } else if (response.equals("AREA_ACCEPTED")){
+                    listener.areaAccepted();
+                } else if (response.equals("AREA_NOT_ACCEPTED")){
+                    listener.areaNotAccepted();
                 }
             }
 
