@@ -257,6 +257,7 @@ public class GameFrame extends JFrame implements GameMessageListener{
                     ifTimeToAcceptDeadFields = false;
                 } else if(ifTimeToAcceptArea){
                     ifMarkArea = true;
+                    suggestButton.setEnabled(true);
                     MyPresenter myPresenter = MyPresenter.INSTANCE;
                     infoLabel.setText("Mark your area!");
                     myPresenter.sendInfo("AREA_ACCEPTED");
@@ -755,7 +756,7 @@ public class GameFrame extends JFrame implements GameMessageListener{
 
     @Override
     public void areaAccepted(){
-        infoLabel.setText("<html>Wait for the opponent<br/>to mark his area.</html>");
+        infoLabel.setText("<html>Opponent accepted your suggestion!<br/>Wait for him to mark his area.</html>");
         ifMarkArea = false;
     }
 
