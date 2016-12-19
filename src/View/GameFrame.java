@@ -254,12 +254,16 @@ public class GameFrame extends JFrame implements GameMessageListener{
                     myPresenter.sendInfo("DEAD_STONES_ACCEPTED");
                     ifTimeToAcceptDeadFields = false;
                 } else if(ifTimeToAcceptArea){
+                    ifAccepted = true;
                     ifMarkArea = true;
                     suggestButton.setEnabled(true);
                     MyPresenter myPresenter = MyPresenter.INSTANCE;
                     infoLabel.setText("Mark your area!");
                     myPresenter.sendInfo("AREA_ACCEPTED");
                     ifTimeToAcceptArea = false;
+                    if(ifOpponentAccepted && ifAccepted){
+                        checkScore();
+                    }
                 }
                 acceptButton.setVisible(false);
                 notAcceptButton.setVisible(false);
@@ -664,6 +668,8 @@ public class GameFrame extends JFrame implements GameMessageListener{
             deleteAcceptedDeadStones();
             myPresenter.sendUpdatedBoard(fields);
             infoLabel.setText("<html>Wait for the opponent<br/>to mark his area.</html>");
+            ifOpponentAccepted = false;
+            ifAccepted = false;
         }
         else {
             myPresenter.sendInfo("MARK_DEAD");
@@ -760,7 +766,14 @@ public class GameFrame extends JFrame implements GameMessageListener{
 
     @Override
     public void areaAccepted(){
-        infoLabel.setText("<html>Opponent accepted your suggestion!<br/>Wait for him to mark his area.</html>");
+        ifOpponentAccepted = true;
+        if(ifOpponentAccepted && ifAccepted){
+            checkScore();
+            ifOpponentAccepted = false;
+            ifAccepted = false;
+        } else {
+            infoLabel.setText("<html>Opponent accepted your suggestion!<br/>Wait for him to mark his area.</html>");
+        }
         ifMarkArea = false;
     }
 
@@ -792,6 +805,46 @@ public class GameFrame extends JFrame implements GameMessageListener{
                 }
             }
         }
+    }
+
+    private void checkScore(){
+        int myArea = 0;
+        int opponentArea = 0;
+
+        int myCaptured;
+        int opponentCaptured;
+
+        int myScore = 0;
+        int opponentScore = 0;
+
+        for (int i = 0; i < 19; i++) {
+            for (int j = 0; j < 19; j++) {
+                if(playerColor.equals("WHITE")) {
+                    if (fields[i][j].getIcon() instanceof BlackMarkedFieldsImg)
+                        opponentArea++;
+                    if (fields[i][j].getIcon() instanceof WhiteFieldsImg)
+                        myArea++;
+                } else if(playerColor.equals("BLACK")) {
+                    if (fields[i][j].getIcon() instanceof BlackMarkedFieldsImg)
+                        myArea++;
+                    if (fields[i][j].getIcon() instanceof WhiteFieldsImg)
+                        opponentArea++;
+                }
+            }
+        }
+
+        myCaptured = Integer.parseInt(myNumberOfCaptured.getText());
+        opponentCaptured = Integer.parseInt(opponentNumberOfCaptured.getText());
+
+        myScore = myArea - opponentCaptured;
+        opponentScore = opponentArea - myCaptured;
+
+        if(myScore > opponentScore){
+            JOptionPane.showMessageDialog(null,"Congrats, you won! :) Your score: " + myScore + ", opponent's score: " + opponentScore);
+        } else if (myScore < opponentScore){
+            JOptionPane.showMessageDialog(null,"What a pity, you lost :( Your score: " + myScore + ", opponent's score: " + opponentScore);
+        } else
+            JOptionPane.showMessageDialog(null,"Wow, we have a draw! Revenge?" + myScore + ", opponent's score: " + opponentScore);
     }
 
     /**
