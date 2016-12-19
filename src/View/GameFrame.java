@@ -817,8 +817,8 @@ public class GameFrame extends JFrame implements GameMessageListener{
         int myArea = 0;
         int opponentArea = 0;
 
-        int myCaptured;
-        int opponentCaptured;
+        int myCaptured = 0;
+        int opponentCaptured = 0;
 
         int myScore = 0;
         int opponentScore = 0;
@@ -828,12 +828,12 @@ public class GameFrame extends JFrame implements GameMessageListener{
                 if(playerColor.equals("WHITE")) {
                     if (fields[i][j].getIcon() instanceof BlackMarkedFieldsImg)
                         opponentArea++;
-                    if (fields[i][j].getIcon() instanceof WhiteFieldsImg)
+                    if (fields[i][j].getIcon() instanceof WhiteMarkedFieldsImg)
                         myArea++;
                 } else if(playerColor.equals("BLACK")) {
                     if (fields[i][j].getIcon() instanceof BlackMarkedFieldsImg)
                         myArea++;
-                    if (fields[i][j].getIcon() instanceof WhiteFieldsImg)
+                    if (fields[i][j].getIcon() instanceof WhiteMarkedFieldsImg)
                         opponentArea++;
                 }
             }
@@ -851,6 +851,9 @@ public class GameFrame extends JFrame implements GameMessageListener{
             JOptionPane.showMessageDialog(null,"What a pity, you lost :( Your score: " + myScore + ", opponent's score: " + opponentScore);
         } else
             JOptionPane.showMessageDialog(null,"Wow, we have a draw! Revenge?" + myScore + ", opponent's score: " + opponentScore);
+
+        ifMarkArea = false;
+        infoLabel.setText("End of the game!");
     }
 
     /**
