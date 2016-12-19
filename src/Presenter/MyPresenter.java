@@ -108,6 +108,16 @@ public enum MyPresenter {
         game.sendResponse("MARKED_AS_DEAD: " + marked);
     }
 
+    public void sendFieldsMarkedAsArea(boolean[][] fieldsMarkedAsArea){
+        ArrayList<String> marked = new ArrayList<>();
+
+        for(int i = 0; i < 19; i++){
+            for(int j = 0; j < 19; j++){
+                marked.add(Boolean.toString(fieldsMarkedAsArea[i][j]));
+            }
+        }
+        game.sendResponse("FINAL_MARKED_AS_AREA: " + marked);
+    }
     public void sendInfoDeadStonesAccepted(){
         game.sendResponse("DEAD_STONES_ACCEPTED");
     }
@@ -165,8 +175,11 @@ public enum MyPresenter {
         else if (response.startsWith("MARKED_AS_DEAD: ")) {
             String response1 = response.replace("MARKED_AS_DEAD: [", "");
             response2 = response1.replace("]", "");
-        } else {
+        } else if (response.startsWith("MARKED_AREA: ")){
             String response1 = response.replace("MARKED_AREA: [","");
+            response2 = response1.replace("]","");
+        } else {
+            String response1 = response.replace("FINAL_MARKED_AS_AREA: [","");
             response2 = response1.replace("]","");
         }
 
@@ -233,6 +246,9 @@ public enum MyPresenter {
                 } else if (response.startsWith("MARKED_AREA: ")){
                     String[][] markedArea = receiveUpdatedBoard(response);
                     listener.showMarkedArea(markedArea);
+                } else if (response.startsWith("FINAL_MARKED_AS_AREA: ")){
+                    String[][] markedArea = receiveUpdatedBoard(response);
+                    listener.showFinalMarkedArea(markedArea);
                 }
             }
 
