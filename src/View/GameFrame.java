@@ -250,9 +250,10 @@ public class GameFrame extends JFrame implements GameMessageListener{
             public void actionPerformed(ActionEvent e) {
                 if(ifTimeToAcceptDeadFields) {
                     ifAccepted = true;
-                    ifMarkDeadStones = true;
+                    suggestButton.setVisible(true);
+                    suggestButton.setEnabled(true);
                     MyPresenter myPresenter = MyPresenter.INSTANCE;
-                    infoLabel.setText("Mark dead stones!");
+                    infoLabel.setText("Mark dead stones of your opponent!");
                     deleteAcceptedDeadStones();
                     myPresenter.sendInfo("DEAD_STONES_ACCEPTED");
                     ifTimeToAcceptDeadFields = false;
