@@ -520,6 +520,7 @@ public class GameFrame extends JFrame implements GameMessageListener{
                 deadBlackFieldsImg[i][j] = deadBlackCenter;
                 deadWhiteFieldsImg[i][j] = deadWhiteCenter;
                 whiteMarkedFieldsImg[i][j] = whiteMarkedCenter;
+                blackMarkedFieldsImg[i][j] = blackMarkedCenter;
             }
         }
 
