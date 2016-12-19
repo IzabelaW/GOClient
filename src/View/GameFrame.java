@@ -678,7 +678,7 @@ public class GameFrame extends JFrame implements GameMessageListener{
     public void deadStonesNotAccepted(){
         deleteNotAcceptedDeadStones();
         ifMarkDeadStones = true;
-        infoLabel.setText("<html>Opponent didn't accept your suggestion.<br/>Mark his dead stones again!.</html>");
+        infoLabel.setText("<html>Opponent didn't accept your suggestion.<br/>Mark his dead stones again!</html>");
         suggestButton.setEnabled(true);
 
     }
@@ -762,8 +762,19 @@ public class GameFrame extends JFrame implements GameMessageListener{
 
     @Override
     public void areaNotAccepted(){
-        infoLabel.setText("<html>Opponent didn't accept your suggestion.<br/>Mark your area again!.</html>");
+        infoLabel.setText("<html>Opponent didn't accept your suggestion.<br/>Mark your area again!</html>");
+        suggestButton.setEnabled(true);
+        deleteNotAcceptedArea();
         ifMarkArea = true;
+    }
+
+    private void deleteNotAcceptedArea(){
+        for (int i = 0; i < 19; i++){
+            for (int j = 0; j < 19; j++){
+                if (fields[i][j].getIcon() instanceof WhiteMarkedFieldsImg || fields[i][j].getIcon() instanceof BlackMarkedFieldsImg)
+                    fields[i][j].setIcon(freeFieldsImg[i][j]);
+            }
+        }
     }
 
     /**
