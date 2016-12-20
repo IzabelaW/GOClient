@@ -36,25 +36,33 @@ public class ChooseRoomFrame extends JFrame {
     /**
      * JPanel which contains list of existing rooms.
      */
-    private JPanel panelForExistingRooms = new JPanel();
+    private JPanel panelForExistingRooms;
 
     /**
      * JPanel which contains buttons for choosing room.
      */
-    private JPanel panelForChooseRoomButtons = new JPanel();
+    private JPanel panelForChooseRoomButtons;
 
     /**
      * JPanel which contains header (New or existing?) and two buttons to choose.
      */
     private JPanel header = new JPanel();
 
+    /**
+     * JPanel which contains button for updating.
+     */
+    private JPanel panelForUpdating = new JPanel();
+
 
     public ChooseRoomFrame() {
 
+        makeFinalFrame();
         makeLists();
         makeViewOfRooms();
         makeHeader();
-        makeFinalFrame();
+        makeFooter();
+        setChooseButtonsActive(false);
+        setVisible(true);
 
     }
 
@@ -79,6 +87,8 @@ public class ChooseRoomFrame extends JFrame {
      * After all it puts everything on two JPanels (panelForExistingRooms and panelForChooseRoomButtons).
      */
     private void makeViewOfRooms(){
+        panelForExistingRooms = new JPanel();
+        panelForChooseRoomButtons = new JPanel();
 
         panelForExistingRooms.setLayout(new GridLayout(indexes.size(),3));
         panelForChooseRoomButtons.setLayout(new GridLayout(indexes.size(),1));
@@ -100,7 +110,6 @@ public class ChooseRoomFrame extends JFrame {
                 player2Label.setForeground(new Color(0x78DD64));
                 ChooseButton chooseButton = new ChooseButton();
                 chooseButton.setIndex(i);
-                chooseButton.setEnabled(false);
                 chooseButtons.add(chooseButton);
                 chooseButton.addActionListener(new ActionListener() {
                     @Override
@@ -126,6 +135,9 @@ public class ChooseRoomFrame extends JFrame {
                 panelForChooseRoomButtons.add(label);
             }
         }
+
+        add(BorderLayout.WEST,panelForChooseRoomButtons);
+        add(BorderLayout.CENTER,panelForExistingRooms);
     }
 
     /**
@@ -178,7 +190,36 @@ public class ChooseRoomFrame extends JFrame {
 
         header.add(BorderLayout.NORTH,chooseRoomLabel);
         header.add(BorderLayout.CENTER, panelForNewExistingButtons);
+        add(BorderLayout.NORTH,header);
 
+    }
+
+    private void makeFooter(){
+
+        JButton refreshButton = new JButton("REFRESH");
+        panelForUpdating.add(refreshButton);
+
+        refreshButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MyPresenter myPresenter = MyPresenter.INSTANCE;
+                myPresenter.sendInfo("REFRESH");
+                panelForChooseRoomButtons.setVisible(false);
+                panelForExistingRooms.setVisible(false);
+                makeLists();
+                makeViewOfRooms();
+                setChooseButtonsActive(true);
+                setVisible(true);
+            }
+        });
+
+        add(BorderLayout.SOUTH, panelForUpdating);
+    }
+
+    private void setChooseButtonsActive(boolean ifActive){
+        for(ChooseButton chooseButton : chooseButtons){
+            chooseButton.setEnabled(ifActive);
+        }
     }
 
     /**
@@ -187,16 +228,12 @@ public class ChooseRoomFrame extends JFrame {
     private void makeFinalFrame(){
 
         setLayout(new BorderLayout());
-        add(BorderLayout.NORTH,header);
-        add(BorderLayout.WEST,panelForChooseRoomButtons);
-        add(BorderLayout.CENTER,panelForExistingRooms);
-
         setTitle("Go Game");
         setSize(400, 600);
         setResizable(false);
         setLocationRelativeTo(null);
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        setVisible(true);
+
 
     }
 

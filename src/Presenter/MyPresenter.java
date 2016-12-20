@@ -7,7 +7,6 @@ import View.ImageIcon.FreeFieldsImg;
 import View.ImageIcon.WhiteFieldsImg;
 import View.Listener.GameMessageListener;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -246,6 +245,9 @@ public enum MyPresenter {
                     listener.areaAccepted();
                 } else if (response.equals("AREA_NOT_ACCEPTED")){
                     listener.areaNotAccepted();
+                }
+                else if(response.equals("RESUME")){
+                    listener.opponentResumed();
                 }
             }
 

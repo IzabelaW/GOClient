@@ -126,6 +126,11 @@ public class GameFrame extends JFrame implements GameMessageListener{
     JButton suggestButton;
 
     /**
+     * Resume game button.
+     */
+    JButton resumeButton;
+
+    /**
      * Player color.
      */
     String playerColor;
@@ -160,6 +165,10 @@ public class GameFrame extends JFrame implements GameMessageListener{
     private Boolean ifTimeToAcceptDeadFields = false;
 
     private Boolean ifTimeToAcceptArea = false;
+
+    private int myDeadStones;
+
+    private int opponentDeadStones;
 
 
     public GameFrame()  {
@@ -319,6 +328,7 @@ public class GameFrame extends JFrame implements GameMessageListener{
 
         passButton = new JButton("PASS");
         suggestButton = new JButton("SUGGEST");
+        resumeButton = new JButton("RESUME");
 
         passButton.addActionListener(new ActionListener() {
             @Override
@@ -355,11 +365,31 @@ public class GameFrame extends JFrame implements GameMessageListener{
                 }
                 infoLabel.setText("<html>Wait for your opponent<br/>to accept it.</html>.");
                 suggestButton.setEnabled(false);
+                resumeButton.setEnabled(false);
+            }
+        });
+
+        resumeButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                MyPresenter myPresenter = MyPresenter.INSTANCE;
+                myPresenter.sendInfo("RESUME");
+
+                myTurn = false;
+                ifMarkDeadStones = false;
+                ifMarkArea = false;
+                resumeButton.setVisible(false);
+                suggestButton.setVisible(false);
+                acceptButton.setVisible(false);
+                notAcceptButton.setVisible(false);
+                infoLabel.setText("Opponent's turn!");
+
             }
         });
 
         passButton.setEnabled(false);
         suggestButton.setVisible(false);
+        resumeButton.setVisible(false);
 
         bottomPanel.add(passButton);
         bottomPanel.add(suggestButton);
@@ -597,7 +627,14 @@ public class GameFrame extends JFrame implements GameMessageListener{
     @Override
     public void opponentGaveUp() {
         JOptionPane.showMessageDialog(null, "Congrats! Opponent gave up. You won!");
+        infoLabel.setText("End of the game.");
         passButton.setEnabled(false);
+        suggestButton.setEnabled(false);
+        acceptButton.setEnabled(false);
+        notAcceptButton.setEnabled(false);
+        ifMarkDeadStones = false;
+        ifMarkArea = false;
+        myTurn = false;
     }
 
     @Override
@@ -635,6 +672,7 @@ public class GameFrame extends JFrame implements GameMessageListener{
         infoLabel.setText("<html>Wait for opponent <br/>to mark dead stones!</html>");
         passButton.setEnabled(false);
         ifMarkDeadStones =false;
+
     }
 
     @Override
@@ -642,6 +680,7 @@ public class GameFrame extends JFrame implements GameMessageListener{
         passButton.setEnabled(false);
         ifMarkDeadStones = true;
         suggestButton.setVisible(true);
+        resumeButton.setVisible(true);
         infoLabel.setText("Mark dead stones of your opponent.");
 
     }
@@ -712,8 +751,9 @@ public class GameFrame extends JFrame implements GameMessageListener{
             for(int j = 0; j < 19; j++){
                 if(fields[i][j].getIcon() instanceof DeadWhiteFieldsImg) {
                     fields[i][j].setIcon(freeFieldsImg[i][j]);
-                    if (playerColor.equals("BLACK"))
+                    if (playerColor.equals("BLACK")) {
                         myCaptured++;
+                    }
                     else if (playerColor.equals("WHITE"))
                         opponentCaptured++;
                 } else if (fields[i][j].getIcon() instanceof DeadBlackFieldsImg){
@@ -734,6 +774,7 @@ public class GameFrame extends JFrame implements GameMessageListener{
         ifMarkArea = true;
         infoLabel.setText("Mark your area.");
         suggestButton.setEnabled(true);
+        resumeButton.setEnabled(true);
     }
 
     @Override
@@ -791,6 +832,11 @@ public class GameFrame extends JFrame implements GameMessageListener{
         ifMarkArea = true;
     }
 
+    @Override
+    public void opponentResumed() {
+        JOptionPane.showMessageDialog(null, "Opponent resumed game. You'r turn!");
+    }
+
     private void deleteMyNotAcceptedArea(){
         for (int i = 0; i < 19; i++){
             for (int j = 0; j < 19; j++){
@@ -814,14 +860,14 @@ public class GameFrame extends JFrame implements GameMessageListener{
     }
 
     private void checkScore(){
-        int myArea = 0;
-        int opponentArea = 0;
+        double myArea = 0;
+        double opponentArea = 0;
 
-        int myCaptured = 0;
-        int opponentCaptured = 0;
+        double myCaptured = 0;
+        double opponentCaptured = 0;
 
-        int myScore = 0;
-        int opponentScore = 0;
+        double myScore = 0;
+        double opponentScore = 0;
 
         for (int i = 0; i < 19; i++) {
             for (int j = 0; j < 19; j++) {
@@ -842,8 +888,14 @@ public class GameFrame extends JFrame implements GameMessageListener{
         myCaptured = Integer.parseInt(myNumberOfCaptured.getText());
         opponentCaptured = Integer.parseInt(opponentNumberOfCaptured.getText());
 
-        myScore = myArea - opponentCaptured;
-        opponentScore = opponentArea - myCaptured;
+        if(playerColor.equals("WHITE")) {
+            myScore = myArea - opponentCaptured + 6.5;
+            opponentScore = opponentArea - myCaptured;
+        }
+        else if(playerColor.equals("BLACK")) {
+            myScore = myArea - opponentCaptured;
+            opponentScore = opponentArea - myCaptured + 6.5;
+        }
 
         if(myScore > opponentScore){
             JOptionPane.showMessageDialog(null,"Congrats, you won! :) Your score: " + myScore + ", opponent's score: " + opponentScore);

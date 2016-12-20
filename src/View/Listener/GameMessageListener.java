@@ -44,4 +44,6 @@ public interface GameMessageListener {
     void areaAccepted();
 
     void areaNotAccepted();
+
+    void opponentResumed();
 }
