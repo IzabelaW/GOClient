@@ -50,6 +50,8 @@ public class ChooseOpponentFrame extends JFrame {
                 else if (botButton.isSelected()){
                     myPresenter.botChosen();
                     GameFrame gameFrame = new GameFrame();
+                    gameFrame.joinToRoom("BOT");
+                    myPresenter.receiveGameMessage(gameFrame);
                 }
 
                 dispose();

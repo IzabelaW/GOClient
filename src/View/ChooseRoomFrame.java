@@ -53,6 +53,8 @@ public class ChooseRoomFrame extends JFrame {
      */
     private JPanel panelForUpdating = new JPanel();
 
+    private Boolean ifExistingClicked = false;
+
 
     public ChooseRoomFrame() {
 
@@ -177,8 +179,8 @@ public class ChooseRoomFrame extends JFrame {
                 myPresenter.existingRoomChosen();
                 newRoomButton.setEnabled(false);
                 existingRoomButton.setEnabled(false);
-                for(ChooseButton chooseButton: chooseButtons)
-                    chooseButton.setEnabled(true);
+                ifExistingClicked = true;
+                setChooseButtonsActive(true);
             }
         });
 
@@ -208,7 +210,10 @@ public class ChooseRoomFrame extends JFrame {
                 panelForExistingRooms.setVisible(false);
                 makeLists();
                 makeViewOfRooms();
-                setChooseButtonsActive(true);
+                if(ifExistingClicked)
+                    setChooseButtonsActive(true);
+                if(!ifExistingClicked)
+                    setChooseButtonsActive(false);
                 setVisible(true);
             }
         });

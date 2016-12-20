@@ -393,6 +393,7 @@ public class GameFrame extends JFrame implements GameMessageListener{
 
         bottomPanel.add(passButton);
         bottomPanel.add(suggestButton);
+        bottomPanel.add(resumeButton);
     }
 
     public void waitingForOpponent(){
@@ -402,6 +403,7 @@ public class GameFrame extends JFrame implements GameMessageListener{
     }
 
     public void opponentJoined(String login){
+        System.out.println("joined");
         opponentLoginLabel.setText(login);
         infoLabel.setText("Opponent's turn!");
         JOptionPane.showMessageDialog(null, "Opponent joined. Let's start the game!");
