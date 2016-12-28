@@ -245,8 +245,7 @@ public enum MyPresenter {
                     listener.areaAccepted();
                 } else if (response.equals("AREA_NOT_ACCEPTED")){
                     listener.areaNotAccepted();
-                }
-                else if(response.equals("RESUME")){
+                } else if(response.equals("RESUME")){
                     listener.opponentResumed();
                 }
             }

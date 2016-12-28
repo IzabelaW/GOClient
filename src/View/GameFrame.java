@@ -396,6 +396,7 @@ public class GameFrame extends JFrame implements GameMessageListener{
                 myPresenter.sendInfo("RESUME");
 
                 myTurn = false;
+                ifOpponentPassed = false;
                 ifMarkDeadStones = false;
                 ifMarkArea = false;
                 resumeButton.setVisible(false);
@@ -869,6 +870,7 @@ public class GameFrame extends JFrame implements GameMessageListener{
         notAcceptButton.setVisible(true);
         acceptButton.setEnabled(true);
         notAcceptButton.setEnabled(true);
+        System.out.println("jest");
     }
 
     @Override
