@@ -67,6 +67,11 @@ public class GameFrame extends JFrame implements GameMessageListener{
     private boolean[][] markedArea = new boolean[19][19];
 
     /**
+     * State of fields which is going to be restored after clicking "Resume" button.
+     */
+    private ImageIcon[][] fieldsAfterResume = new ImageIcon[19][19];
+
+    /**
      * Panel with game board.
      */
     private JPanel panelForBoard;
@@ -165,6 +170,16 @@ public class GameFrame extends JFrame implements GameMessageListener{
     private Boolean ifTimeToAcceptDeadFields = false;
 
     private Boolean ifTimeToAcceptArea = false;
+
+    /**
+     * My number of captured which is going to be after resume.
+     */
+    private String myCapturedAfterResume;
+
+    /**
+     * Opponent's number of captured which is going to be after resume.
+     */
+    private String opponentCapturedAfterResume;
 
     private int myDeadStones;
 
@@ -280,6 +295,7 @@ public class GameFrame extends JFrame implements GameMessageListener{
                     }
                     ifTimeToAcceptArea = false;
                 }
+                resumeButton.setVisible(false);
                 acceptButton.setVisible(false);
                 notAcceptButton.setVisible(false);
 
@@ -300,6 +316,7 @@ public class GameFrame extends JFrame implements GameMessageListener{
                     deleteOpponentNotAcceptedArea();
                     ifTimeToAcceptArea = false;
                 }
+                resumeButton.setVisible(false);
                 notAcceptButton.setEnabled(false);
                 acceptButton.setEnabled(false);
             }
@@ -338,6 +355,10 @@ public class GameFrame extends JFrame implements GameMessageListener{
                 passButton.setEnabled(false);
                 infoLabel.setText("Opponent's turn!");
                 myTurn=false;
+                restorePresentFields();
+                myCapturedAfterResume = myNumberOfCaptured.getText();
+                opponentCapturedAfterResume = opponentNumberOfCaptured.getText();
+
             }
         });
 
@@ -365,7 +386,6 @@ public class GameFrame extends JFrame implements GameMessageListener{
                 }
                 infoLabel.setText("<html>Wait for your opponent<br/>to accept it.</html>.");
                 suggestButton.setEnabled(false);
-                resumeButton.setEnabled(false);
             }
         });
 
@@ -383,6 +403,9 @@ public class GameFrame extends JFrame implements GameMessageListener{
                 acceptButton.setVisible(false);
                 notAcceptButton.setVisible(false);
                 infoLabel.setText("Opponent's turn!");
+                showFieldsAfterResume();
+                myNumberOfCaptured.setText(myCapturedAfterResume);
+                opponentNumberOfCaptured.setText(opponentCapturedAfterResume);
 
             }
         });
@@ -624,6 +647,7 @@ public class GameFrame extends JFrame implements GameMessageListener{
         myTurn = true;
         passButton.setEnabled(true);
         infoLabel.setText("Opponent passed. Your turn!");
+
     }
 
     @Override
@@ -646,12 +670,19 @@ public class GameFrame extends JFrame implements GameMessageListener{
 
                 if (updatedBoard[i][j].equals("FREE")){
                     fields[i][j].setIcon(freeFieldsImg[i][j]);
+                    fields[i][j].revalidate();
+                    fields[i][j].repaint();
                 }
                 else if (updatedBoard[i][j].equals("BLACK")){
                     fields[i][j].setIcon(blackFieldsImg[i][j]);
+                    fields[i][j].revalidate();
+                    fields[i][j].repaint();
+
                 }
                 else if (updatedBoard[i][j].equals("WHITE")){
                     fields[i][j].setIcon(whiteFieldsImg[i][j]);
+                    fields[i][j].revalidate();
+                    fields[i][j].repaint();
                 }
             }
         }
@@ -682,7 +713,7 @@ public class GameFrame extends JFrame implements GameMessageListener{
         passButton.setEnabled(false);
         ifMarkDeadStones = true;
         suggestButton.setVisible(true);
-        resumeButton.setVisible(true);
+        suggestButton.setEnabled(true);
         infoLabel.setText("Mark dead stones of your opponent.");
 
     }
@@ -693,10 +724,16 @@ public class GameFrame extends JFrame implements GameMessageListener{
         for(int i = 0; i < 19; i++){
             for(int j = 0; j < 19; j++){
                 if(markedAsDead[i][j].equals("true")){
-                    if(playerColor.equals("WHITE"))
+                    if(playerColor.equals("WHITE")) {
                         fields[i][j].setIcon(deadWhiteFieldsImg[i][j]);
-                    else if(playerColor.equals("BLACK"))
-                            fields[i][j].setIcon(deadBlackFieldsImg[i][j]);
+                        fields[i][j].revalidate();
+                        fields[i][j].repaint();
+                    }
+                    else if(playerColor.equals("BLACK")) {
+                        fields[i][j].setIcon(deadBlackFieldsImg[i][j]);
+                        fields[i][j].revalidate();
+                        fields[i][j].repaint();
+                    }
                 }
             }
         }
@@ -705,6 +742,7 @@ public class GameFrame extends JFrame implements GameMessageListener{
         notAcceptButton.setVisible(true);
         acceptButton.setEnabled(true);
         notAcceptButton.setEnabled(true);
+        resumeButton.setVisible(true);
     }
 
     @Override
@@ -738,10 +776,16 @@ public class GameFrame extends JFrame implements GameMessageListener{
     private void deleteNotAcceptedDeadStones(){
         for (int i = 0; i < 19; i++){
             for (int j = 0; j < 19; j++){
-                if (fields[i][j].getIcon() instanceof DeadBlackFieldsImg)
+                if (fields[i][j].getIcon() instanceof DeadBlackFieldsImg) {
                     fields[i][j].setIcon(blackFieldsImg[i][j]);
-                else if (fields[i][j].getIcon() instanceof DeadWhiteFieldsImg)
+                    fields[i][j].revalidate();
+                    fields[i][j].repaint();
+                }
+                else if (fields[i][j].getIcon() instanceof DeadWhiteFieldsImg) {
                     fields[i][j].setIcon(whiteFieldsImg[i][j]);
+                    fields[i][j].revalidate();
+                    fields[i][j].repaint();
+                }
             }
         }
     }
@@ -753,6 +797,8 @@ public class GameFrame extends JFrame implements GameMessageListener{
             for(int j = 0; j < 19; j++){
                 if(fields[i][j].getIcon() instanceof DeadWhiteFieldsImg) {
                     fields[i][j].setIcon(freeFieldsImg[i][j]);
+                    fields[i][j].revalidate();
+                    fields[i][j].repaint();
                     if (playerColor.equals("BLACK")) {
                         myCaptured++;
                     }
@@ -760,6 +806,8 @@ public class GameFrame extends JFrame implements GameMessageListener{
                         opponentCaptured++;
                 } else if (fields[i][j].getIcon() instanceof DeadBlackFieldsImg){
                     fields[i][j].setIcon(freeFieldsImg[i][j]);
+                    fields[i][j].revalidate();
+                    fields[i][j].repaint();
                     if (playerColor.equals("BLACK"))
                         opponentCaptured++;
                     else if (playerColor.equals("WHITE"))
@@ -776,7 +824,7 @@ public class GameFrame extends JFrame implements GameMessageListener{
         ifMarkArea = true;
         infoLabel.setText("Mark your area.");
         suggestButton.setEnabled(true);
-        resumeButton.setEnabled(true);
+        //resumeButton.setEnabled(true);
     }
 
     @Override
@@ -785,9 +833,13 @@ public class GameFrame extends JFrame implements GameMessageListener{
             for(int j = 0; j < 19; j++){
                 if((!markedArea[i][j].equals("0")) && playerColor.equals("BLACK")) {
                     fields[i][j].setIcon(blackMarkedFieldsImg[i][j]);
+                    fields[i][j].revalidate();
+                    fields[i][j].repaint();
                     this.markedArea[i][j] = true;
                 } else if ((!markedArea[i][j].equals("0")) && playerColor.equals("WHITE")){
                     fields[i][j].setIcon(whiteMarkedFieldsImg[i][j]);
+                    fields[i][j].revalidate();
+                    fields[i][j].repaint();
                     this.markedArea[i][j] = true;
                 }
             }
@@ -799,10 +851,16 @@ public class GameFrame extends JFrame implements GameMessageListener{
         ifTimeToAcceptArea = true;
         for(int i = 0; i < 19; i++){
             for(int j = 0; j < 19; j++){
-                if(markedArea[i][j].equals("true") && playerColor.equals("BLACK"))
+                if(markedArea[i][j].equals("true") && playerColor.equals("BLACK")) {
                     fields[i][j].setIcon(whiteMarkedFieldsImg[i][j]);
-                else if(markedArea[i][j].equals("true") && playerColor.equals("WHITE"))
+                    fields[i][j].revalidate();
+                    fields[i][j].repaint();
+                }
+                else if(markedArea[i][j].equals("true") && playerColor.equals("WHITE")) {
                     fields[i][j].setIcon(blackMarkedFieldsImg[i][j]);
+                    fields[i][j].revalidate();
+                    fields[i][j].repaint();
+                }
             }
         }
 
@@ -837,6 +895,10 @@ public class GameFrame extends JFrame implements GameMessageListener{
     @Override
     public void opponentResumed() {
         JOptionPane.showMessageDialog(null, "Opponent resumed game. You'r turn!");
+        showFieldsAfterResume();
+        myNumberOfCaptured.setText(myCapturedAfterResume);
+        opponentNumberOfCaptured.setText(opponentCapturedAfterResume);
+
     }
 
     private void deleteMyNotAcceptedArea(){
@@ -845,6 +907,8 @@ public class GameFrame extends JFrame implements GameMessageListener{
                 if ((fields[i][j].getIcon() instanceof WhiteMarkedFieldsImg && playerColor.equals("WHITE"))
                         || (fields[i][j].getIcon() instanceof BlackMarkedFieldsImg && playerColor.equals("BLACK"))) {
                     fields[i][j].setIcon(freeFieldsImg[i][j]);
+                    fields[i][j].revalidate();
+                    fields[i][j].repaint();
                 }
             }
         }
@@ -856,7 +920,25 @@ public class GameFrame extends JFrame implements GameMessageListener{
                 if ((fields[i][j].getIcon() instanceof WhiteMarkedFieldsImg && playerColor.equals("BLACK"))
                         || (fields[i][j].getIcon() instanceof BlackMarkedFieldsImg && playerColor.equals("WHITE"))) {
                     fields[i][j].setIcon(freeFieldsImg[i][j]);
+                    fields[i][j].revalidate();
+                    fields[i][j].repaint();
                 }
+            }
+        }
+    }
+
+    private void restorePresentFields(){
+        for (int i = 0; i < 19; i++){
+            for (int j = 0; j < 19; j++){
+                fieldsAfterResume[i][j] = (ImageIcon)fields[i][j].getIcon();
+            }
+        }
+    }
+
+    private void showFieldsAfterResume(){
+        for (int i = 0; i < 19; i++){
+            for (int j = 0; j < 19; j++){
+                fields[i][j].setIcon(fieldsAfterResume[i][j]);
             }
         }
     }
@@ -923,9 +1005,6 @@ public class GameFrame extends JFrame implements GameMessageListener{
             this.icon = icon;
         }
 
-        public ImageIcon getIcon(){
-            return icon;
-        }
 
         public void setClickedX(int x){
             this.x = x;
