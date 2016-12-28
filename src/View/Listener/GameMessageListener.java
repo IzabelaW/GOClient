@@ -31,6 +31,8 @@ public interface GameMessageListener {
 
     void showMarkedAsDead(String[][] markedAsDead);
 
+    void botAcceptedDeadStones();
+
     void deadStonesAccepted();
 
     void deadStonesNotAccepted();
@@ -40,6 +42,8 @@ public interface GameMessageListener {
     void showMarkedArea(String[][] markedArea);
 
     void showFinalMarkedArea(String[][] markedArea);
+
+    void showFinalSerwerMarkedArea(String[][] markedArea);
 
     void areaAccepted();
 

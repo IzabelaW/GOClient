@@ -170,8 +170,11 @@ public enum MyPresenter {
         } else if (response.startsWith("MARKED_AREA: ")){
             String response1 = response.replace("MARKED_AREA: [","");
             response2 = response1.replace("]","");
-        } else {
+        } else if (response.startsWith("FINAL_MARKED_AS_AREA: ")){
             String response1 = response.replace("FINAL_MARKED_AS_AREA: [","");
+            response2 = response1.replace("]","");
+        } else {
+            String response1 = response.replace("SERWER_MARKED_AREA: [","");
             response2 = response1.replace("]","");
         }
 
@@ -184,6 +187,7 @@ public enum MyPresenter {
                 }
             }
         }
+
         return updatedBoard;
     }
 
@@ -226,9 +230,11 @@ public enum MyPresenter {
                     listener.waitForOpponentToMarkDeadStones();
                 } else if (response.equals("MARK_DEAD")){
                     listener.markDeadStones();
-                } else if (response.startsWith("MARKED_AS_DEAD: ")){
+                } else if (response.startsWith("MARKED_AS_DEAD: ")) {
                     String[][] markedAsDead = receiveUpdatedBoard(response);
                     listener.showMarkedAsDead(markedAsDead);
+                } else if (response.equals("BOT_ACCEPTED_DEAD_STONES")){
+                    listener.botAcceptedDeadStones();
                 } else if (response.equals("DEAD_STONES_ACCEPTED")){
                     listener.deadStonesAccepted();
                 } else if (response.equals("DEAD_STONES_NOT_ACCEPTED")){
@@ -241,6 +247,10 @@ public enum MyPresenter {
                 } else if (response.startsWith("FINAL_MARKED_AS_AREA: ")){
                     String[][] markedArea = receiveUpdatedBoard(response);
                     listener.showFinalMarkedArea(markedArea);
+                } else if (response.startsWith("SERWER_MARKED_AREA: ")){
+                    String[][] markedArea = receiveUpdatedBoard(response);
+                    System.out.println(response);
+                    listener.showFinalSerwerMarkedArea(markedArea);
                 } else if (response.equals("AREA_ACCEPTED")){
                     listener.areaAccepted();
                 } else if (response.equals("AREA_NOT_ACCEPTED")){
