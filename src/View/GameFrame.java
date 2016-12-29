@@ -57,6 +57,26 @@ public class GameFrame extends JFrame implements GameMessageListener{
     private EnteredFieldsImg[][] enteredFieldsImg = new EnteredFieldsImg[19][19];
 
     /**
+     * Table with images of entered white fields during marking dead fields.
+     */
+    private EnteredDeadWhiteFieldsImg[][] enteredDeadWhiteFieldsImg = new EnteredDeadWhiteFieldsImg[19][19];
+
+    /**
+     * Table with images of entered black fields during marking dead fields.
+     */
+    private EnteredDeadBlackFieldsImg[][] enteredDeadBlackFieldsImg = new EnteredDeadBlackFieldsImg[19][19];
+
+    /**
+     * Table with images of entered white fields during marking area.
+     */
+    private EnteredMarkedWhiteFieldsImg[][] enteredMarkedWhiteFieldsImg = new EnteredMarkedWhiteFieldsImg[19][19];
+
+    /**
+     * Table with images of entered black fields during marking area.
+     */
+    private EnteredMarkedBlackFieldsImg[][] enteredMarkedBlackFieldsImg = new EnteredMarkedBlackFieldsImg[19][19];
+
+    /**
      * Table with labels treated like fields.
      */
     private FieldLabel[][] fields = new FieldLabel[19][19];
@@ -225,13 +245,13 @@ public class GameFrame extends JFrame implements GameMessageListener{
                                 myPresenter.moveMade("TURN " + label.getClickedX() + " " + label.getClickedY());
                             } else if(ifMarkDeadStones){
                                 FieldLabel label = (FieldLabel) e.getSource();
-                                if(label.getIcon() instanceof BlackFieldsImg && playerColor.equals("WHITE")) {
+                                if(label.getIcon() instanceof EnteredDeadBlackFieldsImg && playerColor.equals("WHITE")) {
                                     fields[label.getClickedX()][label.getClickedY()].setIcon(deadBlackFieldsImg[label.getClickedX()][label.getClickedY()]);
                                     fields[label.getClickedX()][label.getClickedY()].revalidate();
                                     fields[label.getClickedX()][label.getClickedY()].repaint();
                                     markedAsDead[label.getClickedX()][label.getClickedY()] = true;
                                 }
-                                else if(label.getIcon() instanceof WhiteFieldsImg && playerColor.equals("BLACK")){
+                                else if(label.getIcon() instanceof EnteredDeadWhiteFieldsImg && playerColor.equals("BLACK")){
                                     fields[label.getClickedX()][label.getClickedY()].setIcon(deadWhiteFieldsImg[label.getClickedX()][label.getClickedY()]);
                                     fields[label.getClickedX()][label.getClickedY()].revalidate();
                                     fields[label.getClickedX()][label.getClickedY()].repaint();
@@ -240,7 +260,7 @@ public class GameFrame extends JFrame implements GameMessageListener{
                             } else if(ifMarkArea){
                                 MyPresenter myPresenter = MyPresenter.INSTANCE;
                                 FieldLabel label = (FieldLabel) e.getSource();
-                                if(label.getIcon() instanceof FreeFieldsImg) {
+                                if(label.getIcon() instanceof EnteredMarkedBlackFieldsImg || label.getIcon() instanceof EnteredMarkedWhiteFieldsImg) {
                                     myPresenter.sendInfo("AREA: " + label.getClickedX() + " " + label.getClickedY());
                                 }
                             }
@@ -255,8 +275,28 @@ public class GameFrame extends JFrame implements GameMessageListener{
                         int x = label.getClickedX();
                         int y = label.getClickedY();
                         if(myTurn){
-                            if(fields[x][y].getIcon() instanceof FreeFieldsImg){
+                            if (fields[x][y].getIcon() instanceof FreeFieldsImg){
                                 fields[x][y].setIcon(enteredFieldsImg[x][y]);
+                                fields[x][y].revalidate();
+                                fields[x][y].repaint();
+                            }
+                        } else if (ifMarkDeadStones) {
+                            if (fields[x][y].getIcon() instanceof BlackFieldsImg && playerColor.equals("WHITE")){
+                                fields[x][y].setIcon(enteredDeadBlackFieldsImg[x][y]);
+                                fields[x][y].revalidate();
+                                fields[x][y].repaint();
+                            } else if (fields[x][y].getIcon() instanceof WhiteFieldsImg && playerColor.equals("BLACK")){
+                                fields[x][y].setIcon(enteredDeadWhiteFieldsImg[x][y]);
+                                fields[x][y].revalidate();
+                                fields[x][y].repaint();
+                            }
+                        } else if (ifMarkArea) {
+                            if (fields[x][y].getIcon() instanceof FreeFieldsImg && playerColor.equals("WHITE")){
+                                fields[x][y].setIcon(enteredMarkedWhiteFieldsImg[x][y]);
+                                fields[x][y].revalidate();
+                                fields[x][y].repaint();
+                            } else if (fields[x][y].getIcon() instanceof FreeFieldsImg && playerColor.equals("BLACK")){
+                                fields[x][y].setIcon(enteredMarkedBlackFieldsImg[x][y]);
                                 fields[x][y].revalidate();
                                 fields[x][y].repaint();
                             }
@@ -272,6 +312,22 @@ public class GameFrame extends JFrame implements GameMessageListener{
                         int y = label.getClickedY();
                         if(myTurn){
                             if(fields[x][y].getIcon() instanceof EnteredFieldsImg){
+                                fields[x][y].setIcon(freeFieldsImg[x][y]);
+                                fields[x][y].revalidate();
+                                fields[x][y].repaint();
+                            }
+                        } else if (ifMarkDeadStones){
+                            if (fields[x][y].getIcon() instanceof EnteredDeadBlackFieldsImg){
+                                fields[x][y].setIcon(blackFieldsImg[x][y]);
+                                fields[x][y].revalidate();
+                                fields[x][y].repaint();
+                            } else if (fields[x][y].getIcon() instanceof EnteredDeadWhiteFieldsImg){
+                                fields[x][y].setIcon(whiteFieldsImg[x][y]);
+                                fields[x][y].revalidate();
+                                fields[x][y].repaint();
+                            }
+                        } else if (ifMarkArea){
+                            if (fields[x][y].getIcon() instanceof EnteredMarkedBlackFieldsImg || fields[x][y].getIcon() instanceof EnteredMarkedWhiteFieldsImg){
                                 fields[x][y].setIcon(freeFieldsImg[x][y]);
                                 fields[x][y].revalidate();
                                 fields[x][y].repaint();
@@ -331,6 +387,7 @@ public class GameFrame extends JFrame implements GameMessageListener{
                     infoLabel.setText("Mark your area!");
                     myPresenter.sendInfo("AREA_ACCEPTED");
                     if(ifOpponentAccepted && ifAccepted){
+                        infoLabel.setText("End of the game!");
                         checkScore();
                         ifAccepted = false;
                         ifOpponentAccepted = false;
@@ -562,6 +619,43 @@ public class GameFrame extends JFrame implements GameMessageListener{
         EnteredFieldsImg enteredBottomRightCorner = new EnteredFieldsImg("img/prawydolnySzary.png");
         EnteredFieldsImg enteredTopRightCorner = new EnteredFieldsImg("img/prawygórnySzary.png");
         EnteredFieldsImg enteredCenter = new EnteredFieldsImg("img/środekSzary.png");
+        EnteredDeadWhiteFieldsImg enteredDeadWhiteLeftSide = new EnteredDeadWhiteFieldsImg("img/boklewybiałymartwy.png");
+        EnteredDeadWhiteFieldsImg enteredDeadWhiteRightSide = new EnteredDeadWhiteFieldsImg("img/bokprawybiałymartwy.png");
+        EnteredDeadWhiteFieldsImg enteredDeadWhiteBottom = new EnteredDeadWhiteFieldsImg("img/dółbiałymartwy.png");
+        EnteredDeadWhiteFieldsImg enteredDeadWhiteTop = new EnteredDeadWhiteFieldsImg("img/górabiałymartwy.png");
+        EnteredDeadWhiteFieldsImg enteredDeadWhiteBottomLeftCorner = new EnteredDeadWhiteFieldsImg("img/lewydolnybiałymartwy.png");
+        EnteredDeadWhiteFieldsImg enteredDeadWhiteBottomRightCorner = new EnteredDeadWhiteFieldsImg("img/prawydolnybiałymartwy.png");
+        EnteredDeadWhiteFieldsImg enteredDeadWhiteTopLeftCorner = new EnteredDeadWhiteFieldsImg("img/lewygórnybiałymartwy.png");
+        EnteredDeadWhiteFieldsImg enteredDeadWhiteTopRightCorner = new EnteredDeadWhiteFieldsImg("img/prawygórnybiałymartwy.png");
+        EnteredDeadWhiteFieldsImg enteredDeadWhiteCenter = new EnteredDeadWhiteFieldsImg("img/środekbiałymartwy.png");
+        EnteredDeadBlackFieldsImg enteredDeadBlackLeftSide = new EnteredDeadBlackFieldsImg("img/boklewyczarnymartwy.png");
+        EnteredDeadBlackFieldsImg enteredDeadBlackRightSide = new EnteredDeadBlackFieldsImg("img/bokprawyczarnymartwy.png");
+        EnteredDeadBlackFieldsImg enteredDeadBlackBottom = new EnteredDeadBlackFieldsImg("img/dółczarnymartwy.png");
+        EnteredDeadBlackFieldsImg enteredDeadBlackTop = new EnteredDeadBlackFieldsImg("img/góraczarnymartwy.png");
+        EnteredDeadBlackFieldsImg enteredDeadBlackBottomLeftCorner = new EnteredDeadBlackFieldsImg("img/lewydolnyczarnymartwy.png");
+        EnteredDeadBlackFieldsImg enteredDeadBlackBottomRightCorner = new EnteredDeadBlackFieldsImg("img/prawydolnyczarnymartwy.png");
+        EnteredDeadBlackFieldsImg enteredDeadBlackTopLeftCorner = new EnteredDeadBlackFieldsImg("img/lewygórnyczarnymartwy.png");
+        EnteredDeadBlackFieldsImg enteredDeadBlackTopRightCorner = new EnteredDeadBlackFieldsImg("img/prawygórnyczarnymartwy.png");
+        EnteredDeadBlackFieldsImg enteredDeadBlackCenter = new EnteredDeadBlackFieldsImg("img/środekczarnymartwy.png");
+        EnteredMarkedWhiteFieldsImg enteredMarkedWhiteLeftSide = new EnteredMarkedWhiteFieldsImg("img/boklewykolorbiały.png");
+        EnteredMarkedWhiteFieldsImg enteredMarkedWhiteRightSide = new EnteredMarkedWhiteFieldsImg("img/bokprawykolorbiały.png");
+        EnteredMarkedWhiteFieldsImg enteredMarkedWhiteBottom = new EnteredMarkedWhiteFieldsImg("img/dółkolorbiały.png");
+        EnteredMarkedWhiteFieldsImg enteredMarkedWhiteTop = new EnteredMarkedWhiteFieldsImg("img/górakolorbiały.png");
+        EnteredMarkedWhiteFieldsImg enteredMarkedWhiteBottomLeftCorner = new EnteredMarkedWhiteFieldsImg("img/lewydolnykolorbiały.png");
+        EnteredMarkedWhiteFieldsImg enteredMarkedWhiteBottomRightCorner = new EnteredMarkedWhiteFieldsImg("img/prawydolnykolorbiały.png");
+        EnteredMarkedWhiteFieldsImg enteredMarkedWhiteTopLeftCorner = new EnteredMarkedWhiteFieldsImg("img/lewygórnykolorbiały.png");
+        EnteredMarkedWhiteFieldsImg enteredMarkedWhiteTopRightCorner = new EnteredMarkedWhiteFieldsImg("img/prawygórnykolorbiały.png");
+        EnteredMarkedWhiteFieldsImg enteredMarkedWhiteCenter = new EnteredMarkedWhiteFieldsImg("img/środekkolorbiały.png");
+        EnteredMarkedBlackFieldsImg enteredMarkedBlackLeftSide = new EnteredMarkedBlackFieldsImg("img/boklewykolorczarny.png");
+        EnteredMarkedBlackFieldsImg enteredMarkedBlackRightSide = new EnteredMarkedBlackFieldsImg("img/bokprawykolorczarny.png");
+        EnteredMarkedBlackFieldsImg enteredMarkedBlackBottom = new EnteredMarkedBlackFieldsImg("img/dółkolorczarny.png");
+        EnteredMarkedBlackFieldsImg enteredMarkedBlackTop = new EnteredMarkedBlackFieldsImg("img/górakolorczarny.png");
+        EnteredMarkedBlackFieldsImg enteredMarkedBlackBottomLeftCorner = new EnteredMarkedBlackFieldsImg("img/lewydolnykolorczarny.png");
+        EnteredMarkedBlackFieldsImg enteredMarkedBlackBottomRightCorner = new EnteredMarkedBlackFieldsImg("img/prawydolnykolorczarny.png");
+        EnteredMarkedBlackFieldsImg enteredMarkedBlackTopLeftCorner = new EnteredMarkedBlackFieldsImg("img/lewygórnykolorczarny.png");
+        EnteredMarkedBlackFieldsImg enteredMarkedBlackTopRightCorner = new EnteredMarkedBlackFieldsImg("img/prawygórnykolorczarny.png");
+        EnteredMarkedBlackFieldsImg enteredMarkedBlackCenter = new EnteredMarkedBlackFieldsImg("img/środekkolorczarny.png");
+
 
         freeFieldsImg[0][0] = topLeftCorner;
         whiteFieldsImg[0][0] = whiteTopLeftCorner;
@@ -571,6 +665,11 @@ public class GameFrame extends JFrame implements GameMessageListener{
         whiteMarkedFieldsImg[0][0] = whiteMarkedTopLeftCorner;
         blackMarkedFieldsImg[0][0] = blackMarkedTopLeftCorner;
         enteredFieldsImg[0][0] = enteredTopLeftCorner;
+        enteredDeadBlackFieldsImg[0][0] = enteredDeadBlackTopLeftCorner;
+        enteredDeadWhiteFieldsImg[0][0] = enteredDeadWhiteTopLeftCorner;
+        enteredMarkedWhiteFieldsImg[0][0] = enteredMarkedWhiteTopLeftCorner;
+        enteredMarkedBlackFieldsImg[0][0] = enteredMarkedBlackTopLeftCorner;
+
 
         freeFieldsImg[18][0] = topRightCorner;
         whiteFieldsImg[18][0] = whiteTopRightCorner;
@@ -580,6 +679,10 @@ public class GameFrame extends JFrame implements GameMessageListener{
         whiteMarkedFieldsImg[18][0] = whiteMarkedTopRightCorner;
         blackMarkedFieldsImg[18][0] = blackMarkedTopRightCorner;
         enteredFieldsImg[18][0] = enteredTopRightCorner;
+        enteredDeadBlackFieldsImg[18][0] = enteredDeadBlackTopRightCorner;
+        enteredDeadWhiteFieldsImg[18][0] = enteredDeadWhiteTopRightCorner;
+        enteredMarkedWhiteFieldsImg[18][0] = enteredMarkedWhiteTopRightCorner;
+        enteredMarkedBlackFieldsImg[18][0] = enteredMarkedBlackTopRightCorner;
 
         freeFieldsImg[0][18] = bottomLeftCorner;
         whiteFieldsImg[0][18] = whiteBottomLeftCorner;
@@ -589,6 +692,10 @@ public class GameFrame extends JFrame implements GameMessageListener{
         whiteMarkedFieldsImg[0][18] = whiteMarkedBottomLeftCorner;
         blackMarkedFieldsImg[0][18] = blackMarkedBottomLeftCorner;
         enteredFieldsImg[0][18] = enteredBottomLeftCorner;
+        enteredDeadBlackFieldsImg[0][18] = enteredDeadBlackBottomLeftCorner;
+        enteredDeadWhiteFieldsImg[0][18] = enteredDeadWhiteBottomLeftCorner;
+        enteredMarkedWhiteFieldsImg[0][18] = enteredMarkedWhiteBottomLeftCorner;
+        enteredMarkedBlackFieldsImg[0][18] = enteredMarkedBlackBottomLeftCorner;
 
         freeFieldsImg[18][18] = bottomRightCorner;
         whiteFieldsImg[18][18] = whiteBottomRightCorner;
@@ -598,6 +705,10 @@ public class GameFrame extends JFrame implements GameMessageListener{
         whiteMarkedFieldsImg[18][18] = whiteMarkedBottomRightCorner;
         blackMarkedFieldsImg[18][18] = blackMarkedBottomRightCorner;
         enteredFieldsImg[18][18] = enteredBottomRightCorner;
+        enteredDeadBlackFieldsImg[18][18] = enteredDeadBlackBottomRightCorner;
+        enteredDeadWhiteFieldsImg[18][18] = enteredDeadWhiteBottomRightCorner;
+        enteredMarkedWhiteFieldsImg[18][18] = enteredMarkedWhiteBottomRightCorner;
+        enteredMarkedBlackFieldsImg[18][18] = enteredMarkedBlackBottomRightCorner;
 
         for(int i = 1; i < 18; i++){
             freeFieldsImg[i][0] = top;
@@ -608,6 +719,10 @@ public class GameFrame extends JFrame implements GameMessageListener{
             whiteMarkedFieldsImg[i][0] = whiteMarkedTop;
             blackMarkedFieldsImg[i][0] = blackMarkedTop;
             enteredFieldsImg[i][0] = enteredTop;
+            enteredDeadBlackFieldsImg[i][0] = enteredDeadBlackTop;
+            enteredDeadWhiteFieldsImg[i][0] = enteredDeadWhiteTop;
+            enteredMarkedWhiteFieldsImg[i][0] = enteredMarkedWhiteTop;
+            enteredMarkedBlackFieldsImg[i][0] = enteredMarkedBlackTop;
 
             freeFieldsImg[i][18] = bottom;
             whiteFieldsImg[i][18] = whiteBottom;
@@ -617,6 +732,10 @@ public class GameFrame extends JFrame implements GameMessageListener{
             whiteMarkedFieldsImg[i][18] = whiteMarkedBottom;
             blackMarkedFieldsImg[i][18] = blackMarkedBottom;
             enteredFieldsImg[i][18] = enteredBottom;
+            enteredDeadBlackFieldsImg[i][18] = enteredDeadBlackBottom;
+            enteredDeadWhiteFieldsImg[i][18] = enteredDeadWhiteBottom;
+            enteredMarkedWhiteFieldsImg[i][18] = enteredMarkedWhiteBottom;
+            enteredMarkedBlackFieldsImg[i][18] = enteredMarkedBlackBottom;
 
             freeFieldsImg[0][i] = leftSide;
             whiteFieldsImg[0][i] = whiteLeftSide;
@@ -626,6 +745,10 @@ public class GameFrame extends JFrame implements GameMessageListener{
             whiteMarkedFieldsImg[0][i] = whiteMarkedLeftSide;
             blackMarkedFieldsImg[0][i] = blackMarkedLeftSide;
             enteredFieldsImg[0][i] = enteredLeftSide;
+            enteredDeadBlackFieldsImg[0][i] = enteredDeadBlackLeftSide;
+            enteredDeadWhiteFieldsImg[0][i] = enteredDeadWhiteLeftSide;
+            enteredMarkedWhiteFieldsImg[0][i] = enteredMarkedWhiteLeftSide;
+            enteredMarkedBlackFieldsImg[0][i] = enteredMarkedBlackLeftSide;
 
             freeFieldsImg[18][i] = rightSide;
             whiteFieldsImg[18][i] = whiteRightSide;
@@ -635,6 +758,11 @@ public class GameFrame extends JFrame implements GameMessageListener{
             whiteMarkedFieldsImg[18][i] = whiteMarkedRightSide;
             blackMarkedFieldsImg[18][i] = blackMarkedRightSide;
             enteredFieldsImg[18][i] = enteredRightSide;
+            enteredDeadBlackFieldsImg[18][i] = enteredDeadBlackRightSide;
+            enteredDeadWhiteFieldsImg[18][i] = enteredDeadWhiteRightSide;
+            enteredMarkedWhiteFieldsImg[18][i] = enteredMarkedWhiteRightSide;
+            enteredMarkedBlackFieldsImg[18][i] = enteredMarkedBlackRightSide;
+
         }
 
         for(int i = 1; i < 18; i++){
@@ -647,6 +775,11 @@ public class GameFrame extends JFrame implements GameMessageListener{
                 whiteMarkedFieldsImg[i][j] = whiteMarkedCenter;
                 blackMarkedFieldsImg[i][j] = blackMarkedCenter;
                 enteredFieldsImg[i][j] = enteredCenter;
+                enteredDeadBlackFieldsImg[i][j] = enteredDeadBlackCenter;
+                enteredDeadWhiteFieldsImg[i][j] = enteredDeadWhiteCenter;
+                enteredMarkedWhiteFieldsImg[i][j] = enteredMarkedWhiteCenter;
+                enteredMarkedBlackFieldsImg[i][j] = enteredMarkedBlackCenter;
+
             }
         }
 
@@ -840,7 +973,7 @@ public class GameFrame extends JFrame implements GameMessageListener{
     public void deadStonesNotAccepted(){
         deleteNotAcceptedDeadStones();
         ifMarkDeadStones = true;
-        infoLabel.setText("<html>Opponent didn't accept your suggestion.<br/>Mark his dead stones again!</html>");
+        infoLabel.setText("<html>Opponent didn't accept<br/>your suggestion.<br/>Mark his dead stones again!</html>");
         suggestButton.setEnabled(true);
 
     }
@@ -970,6 +1103,7 @@ public class GameFrame extends JFrame implements GameMessageListener{
     public void areaAccepted(){
         ifOpponentAccepted = true;
         if(ifOpponentAccepted && ifAccepted){
+            infoLabel.setText("<html>Opponent accepted your suggestion!<br/>End of the game!</html>");
             checkScore();
             ifOpponentAccepted = false;
             ifAccepted = false;
@@ -981,7 +1115,7 @@ public class GameFrame extends JFrame implements GameMessageListener{
 
     @Override
     public void areaNotAccepted(){
-        infoLabel.setText("<html>Opponent didn't accept your suggestion.<br/>Mark your area again!</html>");
+        infoLabel.setText("<html>Opponent didn't accept<br/>your suggestion.<br/>Mark your area again!</html>");
         suggestButton.setEnabled(true);
         deleteMyNotAcceptedArea();
         ifMarkArea = true;
