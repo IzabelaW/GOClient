@@ -884,7 +884,7 @@ public class GameFrame extends JFrame implements GameMessageListener{
     }
 
     @Override
-    public void showFinalSerwerMarkedArea(String[][] markedArea){
+    public void showSingleSerwerMarkedArea(String[][] markedArea){
         for(int i = 0; i < 19; i++){
             for(int j = 0; j < 19; j++){
                 if(markedArea[i][j].equals("WHITE")) {
@@ -899,6 +899,10 @@ public class GameFrame extends JFrame implements GameMessageListener{
                 }
             }
         }
+    }
+
+    @Override
+    public void serwerMarkedArea(){
         checkScore();
     }
 

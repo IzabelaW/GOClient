@@ -174,7 +174,7 @@ public enum MyPresenter {
             String response1 = response.replace("FINAL_MARKED_AS_AREA: [","");
             response2 = response1.replace("]","");
         } else {
-            String response1 = response.replace("SERWER_MARKED_AREA: [","");
+            String response1 = response.replace("SINGLE_MARKED_AREA: [","");
             response2 = response1.replace("]","");
         }
 
@@ -247,10 +247,11 @@ public enum MyPresenter {
                 } else if (response.startsWith("FINAL_MARKED_AS_AREA: ")){
                     String[][] markedArea = receiveUpdatedBoard(response);
                     listener.showFinalMarkedArea(markedArea);
-                } else if (response.startsWith("SERWER_MARKED_AREA: ")){
+                } else if (response.startsWith("SINGLE_MARKED_AREA: ")) {
                     String[][] markedArea = receiveUpdatedBoard(response);
-                    System.out.println(response);
-                    listener.showFinalSerwerMarkedArea(markedArea);
+                    listener.showSingleSerwerMarkedArea(markedArea);
+                } else if (response.equals("SERWER_MARKED_AREA")){
+                    listener.serwerMarkedArea();
                 } else if (response.equals("AREA_ACCEPTED")){
                     listener.areaAccepted();
                 } else if (response.equals("AREA_NOT_ACCEPTED")){

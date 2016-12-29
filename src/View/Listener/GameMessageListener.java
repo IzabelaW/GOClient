@@ -43,7 +43,9 @@ public interface GameMessageListener {
 
     void showFinalMarkedArea(String[][] markedArea);
 
-    void showFinalSerwerMarkedArea(String[][] markedArea);
+    void showSingleSerwerMarkedArea(String[][] markedArea);
+
+    void serwerMarkedArea();
 
     void areaAccepted();
 
