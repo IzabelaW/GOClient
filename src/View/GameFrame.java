@@ -3,6 +3,7 @@ package View;
 import Presenter.MyPresenter;
 import View.ImageIcon.*;
 import View.Listener.GameMessageListener;
+import org.mockito.Mock;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,6 +15,8 @@ import java.awt.event.MouseEvent;
 /**
  * Class of frame with game board.
  */
+
+
 public class GameFrame extends JFrame implements GameMessageListener{
 
     /**
@@ -99,12 +102,14 @@ public class GameFrame extends JFrame implements GameMessageListener{
     /**
      * Label with info for me.
      */
+
+
     private JLabel infoLabel;
 
     /**
      * Label with opponent's login.
      */
-    JLabel opponentLoginLabel;
+    private JLabel opponentLoginLabel;
 
     /**
      * TextField with number of my captured.
@@ -118,32 +123,34 @@ public class GameFrame extends JFrame implements GameMessageListener{
     /**
      * Pass button.
      */
-    JButton passButton;
+
+    private JButton passButton;
 
     /**
      * Button which accepts suggested dead stones.
      */
-    JButton acceptButton;
+
+    private JButton acceptButton;
 
     /**
      * Button which doesn't accept suggested dead stones.
      */
-    JButton notAcceptButton;
+    private JButton notAcceptButton;
 
     /**
      * Suggest button.
      */
-    JButton suggestButton;
+    private JButton suggestButton;
 
     /**
      * Resume game button.
      */
-    JButton resumeButton;
+    private JButton resumeButton;
 
     /**
      * Player color.
      */
-    String playerColor;
+    private String playerColor;
 
     /**
      * Statement whether this is the player's turn now.
@@ -469,7 +476,6 @@ public class GameFrame extends JFrame implements GameMessageListener{
     }
 
     public void opponentJoined(String login){
-        System.out.println("joined");
         opponentLoginLabel.setText(login);
         infoLabel.setText("Opponent's turn!");
         JOptionPane.showMessageDialog(null, "Opponent joined. Let's start the game!");

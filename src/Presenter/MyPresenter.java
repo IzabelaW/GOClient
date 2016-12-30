@@ -21,6 +21,8 @@ public enum MyPresenter {
      */
     INSTANCE;
 
+    GameMessageListener listener;
+
     /**
      *  Field of Game class, needed to communication with server (to use it's methods).
      */
@@ -197,6 +199,8 @@ public enum MyPresenter {
      * @return response from server.
      */
     public void receiveGameMessage (GameMessageListener listener){
+
+        this.listener  = listener;
 
         new Thread(() -> {
 
